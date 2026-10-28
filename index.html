@@ -1,0 +1,1918 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>考研英语一大作文 · 填空成文与智能批改（鲁述钊 / 王晶婷 双体系）</title>
+<style>
+  :root{
+    --primary:#0f766e; --primary-dark:#0b5750; --primary-light:#e6f5f3;
+    --accent:#b45309; --accent-light:#fef3c7;
+    --wjt:#7c3aed; --wjt-light:#f3e8ff;
+    --ok:#16a34a; --ok-light:#dcfce7; --err:#dc2626; --err-light:#fee2e2;
+    --warn:#d97706; --text:#1e293b; --muted:#64748b; --border:#dbe4e3;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:"PingFang SC","Microsoft YaHei","Hiragino Sans GB",sans-serif;background:linear-gradient(160deg,#eef6f5 0%,#f8fbfa 100%);color:var(--text);min-height:100vh;line-height:1.6}
+  .wrap{max-width:1020px;margin:0 auto;padding:16px}
+  header{background:linear-gradient(135deg,var(--primary-dark),var(--primary));color:#fff;border-radius:14px;padding:20px 24px;margin-bottom:16px;box-shadow:0 4px 14px rgba(15,118,110,.25)}
+  header h1{font-size:21px;letter-spacing:.5px}
+  header p{font-size:13px;opacity:.92;margin-top:6px}
+  header .meta-line{font-size:12px;opacity:.85;margin-top:10px;padding-top:10px;border-top:1px solid rgba(255,255,255,.25)}
+  .card{background:#fff;border-radius:14px;padding:18px 20px;box-shadow:0 2px 10px rgba(0,0,0,.05);margin-bottom:14px}
+  .card h2{font-size:17px;margin-bottom:4px;color:var(--primary-dark)}
+  .card h3{font-size:15px;margin-bottom:12px;color:var(--primary-dark)}
+  .sub{font-size:13px;color:var(--muted);margin-bottom:14px}
+  .filters{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px}
+  .chip{border:1.5px solid var(--border);background:#fff;border-radius:99px;padding:5px 14px;font-size:13px;cursor:pointer;transition:.15s}
+  .chip:hover{border-color:var(--primary)}
+  .chip.on{background:var(--primary);color:#fff;border-color:var(--primary)}
+  .year-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(148px,1fr));gap:10px}
+  .year-btn{border:1.5px solid var(--border);background:#fff;border-radius:12px;padding:11px 12px;cursor:pointer;text-align:left;transition:.15s}
+  .year-btn:hover{border-color:var(--primary);transform:translateY(-2px);box-shadow:0 4px 12px rgba(15,118,110,.14)}
+  .year-btn b{font-size:16px;color:var(--primary-dark);display:block;margin-bottom:5px}
+  .year-btn .sys{font-size:10.5px;padding:2px 7px;border-radius:99px;display:inline-block;margin:2px 3px 0 0}
+  .year-btn .sys.z{background:var(--primary-light);color:var(--primary-dark)}
+  .year-btn .sys.w{background:var(--wjt-light);color:var(--wjt)}
+  .sysswitch{display:flex;gap:10px;margin-bottom:14px}
+  .sysbtn{flex:1;border:2px solid var(--border);background:#fff;border-radius:12px;padding:12px 14px;cursor:pointer;text-align:left;transition:.15s}
+  .sysbtn:hover{border-color:var(--primary)}
+  .sysbtn.on{border-color:var(--primary);background:var(--primary-light)}
+  .sysbtn.on.wjt{border-color:var(--wjt);background:var(--wjt-light)}
+  .sysbtn b{font-size:14.5px;display:block;color:var(--text)}
+  .sysbtn span{font-size:11.5px;color:var(--muted);display:block;margin-top:3px}
+  .task-head{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;flex-wrap:wrap;margin-bottom:12px}
+  .task-title{font-size:18px;font-weight:700;color:var(--primary-dark)}
+  .badges{display:flex;gap:6px;flex-wrap:wrap}
+  .badge{font-size:11.5px;padding:3px 10px;border-radius:99px;font-weight:600}
+  .badge.g1{background:var(--primary-light);color:var(--primary-dark)}
+  .badge.g2{background:var(--accent-light);color:var(--accent)}
+  .badge.g3{background:var(--wjt-light);color:var(--wjt)}
+  .prompt{background:#f8fafc;border-left:3px solid var(--primary);border-radius:8px;padding:12px 14px;font-size:13.5px;line-height:1.85;white-space:pre-wrap;margin-bottom:10px}
+  .points{list-style:none;font-size:13.5px}
+  .points li{padding:5px 0 5px 24px;position:relative}
+  .points li:before{content:"✎";position:absolute;left:4px;color:var(--accent)}
+  .sec{border:1.5px solid var(--border);border-radius:12px;padding:13px 15px;margin-bottom:11px;transition:.15s;background:#fff}
+  .sec.filled{border-color:#9fd6cf;background:#fbfffe}
+  .sec.missing{border-color:#f5c6c6;background:#fffafa}
+  .sec-head{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:9px}
+  .sec-label{font-size:13.5px;font-weight:700;color:var(--primary-dark)}
+  .sec-label .req{color:var(--err);font-size:11px;margin-left:5px;font-weight:600}
+  .sec-label .opt{color:var(--muted);font-size:11px;margin-left:5px}
+  select,input[type=text],textarea{width:100%;border:1.5px solid var(--border);border-radius:8px;padding:8px 11px;font-size:13px;font-family:inherit;color:var(--text);background:#fff;transition:.15s}
+  select:focus,input[type=text]:focus,textarea:focus{outline:none;border-color:var(--primary);box-shadow:0 0 0 3px rgba(15,118,110,.1)}
+  textarea{resize:vertical;min-height:52px;line-height:1.6}
+  .sent-en{font-size:13.5px;color:#0f172a;background:#f1f5f9;border-radius:8px;padding:9px 11px;margin-top:7px;line-height:1.7;font-family:Georgia,"Times New Roman",serif}
+  .slot-box{margin-top:9px;display:flex;flex-direction:column;gap:8px}
+  .slot-row label{font-size:12px;color:var(--muted);display:block;margin-bottom:3px}
+  .slot-row .hint{font-size:11.5px;color:#94a3b8;margin-top:3px;display:block}
+  .sent-block{border:1px dashed #cfe0de;border-radius:10px;padding:10px 12px;margin-top:9px;background:#fcfefd}
+  .sent-block .sb-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:7px}
+  .sent-block .sb-no{font-size:11.5px;color:var(--muted);font-weight:600}
+  .mini-btn{background:#fff;border:1.2px solid var(--border);border-radius:7px;padding:3px 10px;font-size:11.5px;cursor:pointer;color:var(--muted);font-family:inherit}
+  .mini-btn:hover{border-color:var(--primary);color:var(--primary-dark)}
+  .add-btn{margin-top:9px;background:#f8fafc;border:1.2px dashed #bcd3d0;border-radius:8px;padding:7px;font-size:12.5px;width:100%;cursor:pointer;color:var(--primary-dark);font-family:inherit}
+  .add-btn:hover{background:var(--primary-light)}
+  .preview{background:#fffdf7;border:1.5px dashed #e5d9b8;border-radius:10px;padding:16px 18px;font-size:14.5px;line-height:1.95;white-space:pre-wrap;color:#1e293b;min-height:140px;text-align:left;tab-size:4}
+  .preview.mono{font-family:Consolas,"Courier New",monospace;font-size:13.5px}
+  .preview.serif{font-family:Georgia,"Times New Roman",serif}
+  .preview .ph{color:#cbd5e1}
+  /* 小标题 / 空行可视化 */
+  .preview .hd{color:#0f766e;font-weight:700;letter-spacing:.2px}
+  .preview .pts{color:#94a3b8}
+  .pv-bar{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:8px}
+  .pv-tip{font-size:11.5px;color:var(--muted)}
+  /* 段落小标题输入 */
+  .head-row{display:flex;gap:8px;align-items:center;margin:0 0 8px;flex-wrap:wrap}
+  .head-row label{font-size:12px;color:var(--muted);white-space:nowrap}
+  .head-row input{flex:1;min-width:160px;border:1.5px solid var(--border);border-radius:8px;padding:6px 9px;font-size:13px;font-family:Georgia,serif}
+  .head-row input:focus{outline:none;border-color:var(--primary)}
+  /* 槽位推荐词条 */
+  .chip-row{display:flex;gap:6px;flex-wrap:wrap;margin-top:6px}
+  .chip-mini{border:1px solid var(--border);background:#fff;border-radius:99px;padding:2px 9px;font-size:11.5px;cursor:pointer;color:#475569}
+  .chip-mini:hover{border-color:var(--primary);color:var(--primary-dark);background:var(--primary-light)}
+  /* 整段删除状态 */
+  .sec.emptied{opacity:.62;background:#fbfbfb}
+  .empty-note{font-size:12.5px;color:var(--muted);background:#f1f5f9;border:1px dashed var(--border);border-radius:8px;padding:8px 10px}
+  .sec-label .gone{background:#e2e8f0;color:#64748b;border-radius:6px;padding:1px 7px;font-size:10.5px;margin-left:6px}
+  /* 自由输入 & AI 选项 */
+  .free-box textarea{width:100%;min-height:64px;border:1.5px solid #c7b8f0;background:#faf7ff;border-radius:8px;padding:8px 10px;font-size:13px;font-family:Georgia,serif;line-height:1.7}
+  .free-box textarea:focus{outline:none;border-color:var(--wjt)}
+  .tag-ai{background:var(--wjt-light);color:var(--wjt);border-radius:6px;padding:1px 6px;font-size:10.5px;margin-left:4px}
+  .tag-free{background:var(--accent-light);color:var(--accent);border-radius:6px;padding:1px 6px;font-size:10.5px;margin-left:4px}
+  .ai-sent{border:1.5px dashed #c7b8f0;background:#faf7ff;border-radius:8px;padding:7px 10px;margin-top:6px;font-size:12.5px;line-height:1.7}
+  .ai-sent .en{font-family:Georgia,serif;color:#3b0764}
+  /* 大作文：图画内容 / 主旨句提示 / 段落分组 */
+  .cap-row{display:flex;gap:8px;align-items:flex-start;margin-top:10px;padding-top:10px;border-top:1px dashed var(--border)}
+  .cap-tag{flex:none;background:var(--accent-light);color:var(--accent);border-radius:6px;padding:2px 9px;font-size:11.5px;font-weight:700}
+  .cap-text{font-size:13px;line-height:1.85;color:#334155}
+  .thesis-box{background:#fffdf7;border:1.5px dashed #e5d9b8;border-radius:8px;padding:10px 12px}
+  .thesis-body{margin-top:8px;font-size:13px;line-height:1.9;color:#334155;white-space:pre-wrap}
+  .thesis-body .th-zh,.thesis-body .th-en{margin-bottom:6px}
+  .para-head{display:flex;align-items:center;gap:9px;margin:18px 0 8px;padding-bottom:6px;border-bottom:1.5px solid var(--border)}
+  .para-head:first-child{margin-top:0}
+  .para-no{background:var(--primary);color:#fff;border-radius:6px;padding:2px 10px;font-size:12.5px;font-weight:700}
+  .para-tip{font-size:11.5px;color:var(--muted)}
+  .preview .para{display:block}
+  /* 题目区（真题原文 + 中文对照，左右并排） */
+  .exam-q{background:#f8fafc;border:1.5px solid var(--border);border-left:4px solid var(--primary);border-radius:10px;padding:13px 15px}
+  .eq-head{display:flex;align-items:center;gap:8px;margin-bottom:10px}
+  .eq-tag{background:var(--primary);color:#fff;border-radius:6px;padding:2px 9px;font-size:12px;font-weight:700;letter-spacing:.5px}
+  .eq-src{font-size:11.5px;color:var(--muted)}
+  .eq-grid{display:grid;grid-template-columns:1fr 1fr;gap:0}
+  .eq-col{padding:0 14px}
+  .eq-col:first-child{padding-left:0}
+  .eq-col:last-child{padding-right:0;border-left:1.5px dashed #dbe4e3}
+  .eq-col-tag{display:inline-block;font-size:11.5px;font-weight:700;border-radius:5px;padding:1px 8px;margin-bottom:7px;
+              background:var(--primary-light);color:var(--primary-dark)}
+  .eq-col-tag.zh{background:var(--accent-light);color:var(--accent)}
+  .eq-en{font-family:Georgia,"Times New Roman",serif;font-size:13.5px;line-height:1.9;color:#1e293b;white-space:pre-wrap}
+  .eq-zh{font-size:13px;line-height:1.9;color:#334155;white-space:pre-wrap}
+  @media(max-width:860px){
+    .eq-grid{grid-template-columns:1fr;gap:12px}
+    .eq-col{padding:0}
+    .eq-col:last-child{border-left:none;border-top:1.5px dashed #dbe4e3;padding-top:10px}
+  }
+  /* 语法纠正清单 */
+  .old-txt{text-decoration:line-through;text-decoration-color:#dc2626;background:#fef2f2;padding:1px 4px;border-radius:4px;font-family:Georgia,serif}
+  .fix{background:#dcfce7;color:#15803d;padding:1px 5px;border-radius:4px;font-family:Georgia,serif;font-weight:600}
+  .wc{font-size:12.5px;color:var(--muted);font-weight:400}
+  .wc.bad{color:var(--err);font-weight:600}
+  .actions{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:20px}
+  .btn{background:#fff;border:1.5px solid var(--border);border-radius:10px;padding:11px 22px;font-size:14px;cursor:pointer;font-weight:600;color:var(--text);transition:.15s;font-family:inherit}
+  .btn:hover{border-color:var(--primary);color:var(--primary-dark)}
+  .btn.primary{background:var(--primary);color:#fff;border-color:var(--primary)}
+  .btn.primary:hover{background:var(--primary-dark);color:#fff}
+  .btn.ghost{background:#f8fafc}
+  .btn.ai{background:linear-gradient(135deg,#4f46e5,#7c3aed);color:#fff;border-color:#6366f1}
+  .btn.ai:hover{background:linear-gradient(135deg,#4338ca,#6d28d9);color:#fff}
+  .btn.ai:disabled{opacity:.65;cursor:wait}
+  .ai-score{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;margin-bottom:12px;padding-bottom:12px;border-bottom:1px solid var(--border)}
+  .ai-score b{font-size:34px;color:#4f46e5}
+  .ai-score .band{font-size:12.5px;color:var(--muted)}
+  .ai-sec{margin-bottom:12px}
+  .ai-sec h4{font-size:13.5px;color:#4f46e5;margin-bottom:6px}
+  .ai-dim{border-left:3px solid #c7d2fe;padding:6px 0 6px 11px;margin-bottom:8px;font-size:13px;line-height:1.7}
+  .ai-dim b{color:#3730a3}
+  .ai-issue{border:1px solid var(--border);border-left:3px solid var(--err);border-radius:8px;padding:9px 12px;margin-bottom:8px;font-size:13px;line-height:1.75;background:#fffafa}
+  .ai-issue .t{font-size:11px;padding:1px 7px;border-radius:99px;background:var(--err-light);color:var(--err);font-weight:700;margin-right:6px}
+  .ai-issue .fix{color:#0f766e;font-weight:600}
+  .ai-issue .why{color:var(--muted);font-size:12.3px}
+  .ai-hl{font-size:13px;line-height:1.8;padding:4px 0 4px 20px;position:relative}
+  .ai-hl:before{content:"✨";position:absolute;left:0}
+  .ai-up{border-left:3px solid var(--ok);padding:7px 0 7px 11px;margin-bottom:8px;font-size:13px;line-height:1.8}
+  .ai-up .old{color:var(--muted);text-decoration:line-through}
+  .ai-up .new{color:#065f46;font-weight:600}
+  .ai-loading{display:flex;align-items:center;gap:10px;font-size:13.5px;color:#4f46e5;padding:14px 0}
+  .spin{width:16px;height:16px;border:2.5px solid #ddd6fe;border-top-color:#4f46e5;border-radius:50%;animation:sp .8s linear infinite}
+  @keyframes sp{to{transform:rotate(360deg)}}
+  .modal{position:fixed;inset:0;background:rgba(15,23,42,.5);display:none;align-items:center;justify-content:center;z-index:99;padding:16px}
+  .modal.on{display:flex}
+  .modal-box{background:#fff;border-radius:14px;padding:20px 22px;max-width:520px;width:100%;box-shadow:0 20px 50px rgba(0,0,0,.3)}
+  .modal-box h3{font-size:16px;margin-bottom:6px;color:var(--primary-dark)}
+  .modal-box p{font-size:12.5px;color:var(--muted);line-height:1.75;margin-bottom:10px}
+  .modal-box .row{display:flex;gap:8px;margin-top:12px}
+  .score-hero{text-align:center;padding:6px 0 2px}
+  .big-score{font-size:56px;font-weight:800;color:var(--primary-dark);line-height:1.1}
+  .big-score small{font-size:20px;color:var(--muted);font-weight:600}
+  .score-sub{font-size:13.5px;color:var(--muted);margin-top:4px}
+  .verdict{display:inline-block;margin-top:10px;padding:6px 18px;border-radius:99px;font-size:14px;font-weight:700}
+  .band{font-size:12.5px;color:var(--muted);margin-top:8px}
+  .dim{border:1.5px solid var(--border);border-radius:12px;padding:13px 15px;margin-bottom:10px}
+  .dim-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+  .dim-name{font-size:14px;font-weight:700}
+  .dim-score{font-size:14px;font-weight:700}
+  .bar{height:7px;background:#e8eeed;border-radius:99px;overflow:hidden;margin-bottom:9px}
+  .bar i{display:block;height:100%;border-radius:99px;transition:width .5s}
+  .check{font-size:12.8px;padding:3px 0 3px 21px;position:relative;color:#334155}
+  .check:before{position:absolute;left:2px;font-weight:700}
+  .check.ok:before{content:"✓";color:var(--ok)}
+  .check.no:before{content:"✗";color:var(--err)}
+  .check.tip:before{content:"•";color:var(--muted)}
+  .advice{font-size:13.3px;line-height:1.75;padding:8px 0 8px 24px;position:relative;border-bottom:1px dashed var(--border)}
+  .advice:last-child{border-bottom:none}
+  .advice:before{content:"💡";position:absolute;left:0}
+  .ref{background:#f8fafc;border-radius:10px;padding:14px 16px;font-family:Consolas,"Courier New",monospace;font-size:13px;line-height:1.85;white-space:pre-wrap;color:#334155}
+  .foot{text-align:center;color:var(--muted);font-size:12px;margin:22px 0 12px;line-height:1.9}
+  .foot .cr{font-size:11.5px;color:#94a3b8}
+  .back-btn{background:rgba(255,255,255,.18);border:1px solid rgba(255,255,255,.45);color:#fff;border-radius:8px;padding:5px 13px;font-size:13px;cursor:pointer;margin-bottom:10px;font-family:inherit}
+  .back-btn:hover{background:rgba(255,255,255,.3)}
+  .legend{font-size:12.5px;color:var(--muted);margin-top:12px;padding-top:11px;border-top:1px solid var(--border)}
+  .legend b{color:var(--primary-dark)}
+  @media (max-width:640px){
+    .wrap{padding:10px}.card{padding:15px}
+    .year-grid{grid-template-columns:repeat(auto-fill,minmax(116px,1fr))}
+    .big-score{font-size:46px}.sysswitch{flex-direction:column}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div id="hdBar"></div>
+    <h1>📝 考研英语（一）大作文 · 填空成文与智能批改</h1>
+    <p>2010–2026 全部 17 年真题 · 三套三段模板（鲁述钊 / 王晶婷 / DeepSeek 自编）· 四维度 20 分制 + 分档 + 语法逐条纠正</p>
+    <div class="meta-line">语料来源：鲁述钊《2027冲刺写作》＋ 王晶婷《27大作文模板课》＋《默写版 2001-2026 主旨句》｜DeepSeek 模板为本项目 AI 原创（不取讲义）</div>
+  </header>
+
+  <!-- ============ 首页 ============ -->
+  <div id="viewHome">
+    <div class="card">
+      <h2>选择年份 / 真题</h2>
+      <div class="sub">点击年份后可在写作页随时切换体系（鲁述钊 / 王晶婷 / DeepSeek 自编），三套三段模板独立对照</div>
+      <div class="filters" id="filters"></div>
+      <div class="year-grid" id="yearGrid"></div>
+      <div class="legend">
+        <b>三套体系</b>：<span style="color:#0b5750">鲁述钊</span>＝长难句＋倒装，第二段 For one thing / In the meantime … For another ＋ 名人事例，第三段结论＋建议＋Only in this way；
+        <span style="color:#7c3aed">王晶婷</span>＝第一段 9 种总体描述＋细节＋图文字，第二段主旨句＋十大万能原因（选 2–3），第三段总结＋建议＋展望；
+        <span style="color:#b45309">DeepSeek</span>＝本项目 AI 自编模板（不取讲义）：一眼抓住画面 → 一句点透寓意 → 两条原因＋一个例子 → 一条落地建议＋Only in this way 收尾，句长居中、衔接最紧。
+        三套的第二段框架不同，<b>同一篇不要混用</b>。大作文不写标题、不写落款。
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ 写作页 ============ -->
+  <div id="viewWrite" style="display:none">
+    <div class="card">
+      <div class="sysswitch" id="sysSwitch"></div>
+      <div class="task-head">
+        <div>
+          <div class="task-title" id="taskTitle"></div>
+          <div class="sub" id="taskNote" style="margin:4px 0 0"></div>
+        </div>
+        <div class="badges" id="taskBadges"></div>
+      </div>
+      <div class="exam-q">
+        <div class="eq-head">
+          <span class="eq-tag">题目</span>
+          <span class="eq-src" id="promptSrc"></span>
+        </div>
+        <div class="eq-grid">
+          <div class="eq-col">
+            <div class="eq-col-tag">英文原题</div>
+            <div class="eq-en" id="promptText"></div>
+          </div>
+          <div class="eq-col">
+            <div class="eq-col-tag zh">中文对照</div>
+            <div class="eq-zh" id="promptZh"></div>
+          </div>
+        </div>
+        <div class="cap-row">
+          <span class="cap-tag">图画/图表内容</span>
+          <span class="cap-text" id="capText"></span>
+        </div>
+      </div>
+      <div style="font-size:13px;font-weight:700;color:var(--primary-dark);margin:12px 0 6px">本题寓意（主旨句）——先自己写，卡壳再点开</div>
+      <div class="thesis-box">
+        <button class="mini-btn" id="thesisBtn" onclick="toggleThesis()">💡 看本题标准主旨句</button>
+        <div class="thesis-body" id="thesisBody" style="display:none"></div>
+      </div>
+      <div style="font-size:13px;font-weight:700;color:var(--primary-dark);margin:12px 0 6px">写作要求（三段必须都覆盖）</div>
+      <ul class="points" id="requiredPoints"></ul>
+    </div>
+
+    <div class="card">
+      <h3>① 填空成文（逐段选择句型 + 填写槽位）</h3>
+      <div class="sub" style="margin-bottom:12px" id="formTip"></div>
+      <div id="sectionForm"></div>
+    </div>
+
+    <div class="card">
+      <h3>② 成文预览 <span class="wc" id="wordCount"></span></h3>
+      <div class="pv-bar">
+        <button class="btn mini-btn" onclick="copyEssay()">📄 复制全文</button>
+        <button class="btn mini-btn" onclick="downloadEssay()">💾 下载 TXT</button>
+        <button class="btn mini-btn" onclick="toggleGuide()">👁 显示/隐藏格式标记</button>
+        <span class="pv-tip" id="pvTip"></span>
+      </div>
+      <div class="preview" id="preview"></div>
+      <div id="liveHints" style="margin-top:10px"></div>
+    </div>
+
+    <div class="actions">
+      <button class="btn ghost" onclick="fillReference()">📋 填入参考答案（含本题主旨句）</button>
+      <button class="btn ghost" onclick="clearAll()">🗑 清空重填</button>
+      <button class="btn ghost" onclick="openAiSettings()">🔑 AI 设置</button>
+      <button class="btn" onclick="showHome()">← 换一年</button>
+      <button class="btn primary" onclick="gradeEssay()">✅ 提交批改评分</button>
+      <button class="btn ai" onclick="aiReview()">🤖 AI 智能评价</button>
+    </div>
+  </div>
+
+  <!-- ============ 评分结果 ============ -->
+  <div id="viewResult" style="display:none">
+    <div class="card">
+      <div class="score-hero">
+        <div class="big-score" id="bigScore">0<small>/10</small></div>
+        <div class="score-sub" id="scoreSub"></div>
+        <div class="verdict" id="verdict"></div>
+        <div class="band" id="bandText"></div>
+      </div>
+    </div>
+    <div class="card"><h3>分维度评分明细</h3><div id="dimensions"></div></div>
+    <div class="card">
+      <h3>🔍 语法与用法逐条纠正 <span class="wc" id="gramMeta"></span></h3>
+      <div class="sub">左右对照给出"原文 → 应写成"，每条都说明为什么。这里的错误已直接扣在语言分里。</div>
+      <div id="gramBody"></div>
+      <div style="margin-top:10px">
+        <button class="mini-btn" onclick="copyFixList()">📋 复制修改清单</button>
+        <button class="mini-btn" onclick="backToWrite()">✍️ 回到修改</button>
+      </div>
+    </div>
+    <div class="card" id="aiCard" style="display:none">
+      <h3>🤖 AI 智能评价 <span class="wc" id="aiMeta"></span></h3>
+      <div id="aiBody"></div>
+    </div>
+    <div class="card"><h3>改进建议</h3><div id="suggestions"></div></div>
+    <div class="card"><h3>参考答案（讲义预填槽位）</h3><div class="ref" id="refEssay"></div></div>
+    <div class="actions">
+      <button class="btn" onclick="backToWrite()">← 返回修改</button>
+      <button class="btn ai" onclick="aiReview()">🤖 重新 AI 评价</button>
+      <button class="btn ghost" onclick="copyEssay()">📄 复制全文</button>
+      <button class="btn ghost" onclick="downloadEssay()">💾 下载 TXT</button>
+      <button class="btn ghost" onclick="showHome()">🏠 换一年</button>
+      <button class="btn ghost" onclick="window.print()">🖨 打印/存 PDF</button>
+    </div>
+  </div>
+
+  <div class="foot">
+    <div>内容来源：鲁述钊《2027冲刺写作》＋ 王晶婷《27大作文模板课》＋《默写版 2001-2026 主旨句》｜原题：2010–2026 英语（一）真题 · 语料整理：21stThoracicman</div>
+    <div class="cr">程序开发：DeepSeek AI ｜「DeepSeek 模板」为本项目 AI 原创，不取自任何讲义，可自由使用</div>
+    <div class="cr"><b>本软件完全免费、非盈利</b>，仅供个人考研复习使用</div>
+    <div class="cr">讲义与模板版权归原作者（鲁述钊、王晶婷）及出版方所有；本工具仅为学习目的对公开讲义做结构化整理，不作商业用途、不收取任何费用</div>
+    <div class="cr">如版权方认为不妥，请联系删除 · 请勿用于售卖、培训收费等任何商业场景</div>
+  </div>
+</div>
+
+<!-- ============ AI 设置弹窗 ============ -->
+<div class="modal" id="aiModal">
+  <div class="modal-box">
+    <h3>🔑 AI 智能评价设置</h3>
+    <p>填入 DeepSeek API Key 后即可使用"AI 智能评价"（逐句纠错、打分定档、升级句式）。<br>
+       Key <b>只保存在你自己的浏览器</b>（localStorage），不会上传到任何服务器。</p>
+    <label style="font-size:12.5px;color:var(--muted);display:block;margin-bottom:4px">DeepSeek API Key（sk- 开头）</label>
+    <input type="text" id="aiKeyInput" placeholder="sk-xxxxxxxxxxxxxxxx">
+    <p style="margin-top:8px;font-size:12px">模型：<select id="aiModel" style="width:auto;padding:3px 8px;font-size:12px">
+      <option value="deepseek-chat">deepseek-chat（通用，推荐）</option>
+      <option value="deepseek-reasoner">deepseek-reasoner（推理更强，更慢更贵）</option>
+    </select></p>
+    <div class="row">
+      <button class="btn primary" onclick="saveAiKey()">保存</button>
+      <button class="btn ghost" onclick="closeAiSettings()">取消</button>
+      <button class="btn ghost" onclick="clearAiKey()">清除 Key</button>
+    </div>
+    <p style="margin-top:10px;font-size:11.5px" id="aiKeyState"></p>
+  </div>
+</div>
+
+<script>
+/* ================= 语料数据（构建时注入） ================= */
+const DATA = {"plans":[{"year":2010,"kind":"现象类","topic":"文化融合","caption":"文化“火锅”，既美味又营养（画面：一张西式餐桌正中是一个\"火锅\"，锅里煮着孔子、莎士比亚、毕加索等中外文化名人的形象与符号，旁边两位食客正举筷品尝）","caption_plain":"文化“火锅”，既美味又营养","caption_en":"a big hotpot placed at the centre of a Western dinner table, in which symbols of Chinese and foreign cultures are boiling together","caption_word_en":"A Cultural Hotpot: Delicious and Nutritious","topic_en":"cultural integration","prompt_en":"52. Directions: Write an essay of 160-200 words based on the following drawing. In your essay, you should 1) describe the drawing briefly, 2) explain its intended meaning, and 3) give your comments. You should write neatly on ANSWER SHEET 2. (20 points)","prompt_zh":"52. 说明：\n请根据下面的图画写一篇 160–200 词的短文。文中你应当：1）简要描述图画；2）解释其含义；3）给出你的评论。\n请工整地写在答题卡 2 上。（20 分）","thesis_en":"cultural blending exerts an inescapably significant impact on social dynamics. With increased intercultural contact come new opportunities for understanding and collaboration.","thesis_zh":"文化融合对社会动态产生了不可忽视的重大影响。随着跨文化接触的增加，理解和合作的新机会也随之而来。","recommend_reasons":["1 社会经济科技","4 社会风气","5 社会思想转变"],"genre":"picture","word_target":200},{"year":2011,"kind":"现象类","topic":"环境/垃圾","caption":"旅程之“余”——游客在游船上往水里扔垃圾（补充）（画面：一艘游船上，游客一边欣赏两岸风景，一边把饮料瓶、塑料袋等垃圾随手抛入水中，船尾水面漂满杂物）","caption_plain":"旅程之“余”——游客在游船上往水里扔垃圾","caption_en":"tourists on a boat throwing bottles and plastic bags into the river while enjoying the scenery, with rubbish floating on the water behind them","caption_word_en":"The Leftovers of a Journey","topic_en":"environmental protection","prompt_en":"52. Directions: Write an essay of 160-200 words based on the following drawing. In your essay, you should 1) describe the drawing briefly, 2) explain its intended meaning, and 3) give your comments. You should write neatly on ANSWER SHEET 2. (20 points)","prompt_zh":"52. 说明：\n请根据下面的图画写一篇 160–200 词的短文。文中你应当：1）简要描述图画；2）解释其含义；3）给出你的评论。\n请工整地写在答题卡 2 上。（20 分）","thesis_en":"neither one's healthy life nor a society's sustainable development would be attainable without a livable environment and a stable ecological foundation.","thesis_zh":"一个人的健康生活和一个社会的可持续发展几乎是不可能实现的，如果没有宜居的生活环境和稳定的生态基础。","recommend_reasons":["1 社会经济科技","4 社会风气","5 社会思想转变"],"genre":"picture","word_target":200},{"year":2012,"kind":"哲理品质类","topic":"心态","caption":"乐观与悲观——两人面对倒地的瓶子（补充）（画面：一瓶酒（或饮料）倒在地上洒了一半：左边的人哀叹\"全完了\"，右边的人庆幸\"还剩一点\"——同样的处境，两种心态）","caption_plain":"乐观与悲观——两人面对倒地的瓶子","caption_en":"a bottle lying on the ground with half of its content spilt: one man sighs that everything is ruined while the other smiles that something is left","caption_word_en":"","topic_en":"an optimistic attitude","prompt_en":"52. Directions: Write an essay of 160-200 words based on the following drawing. In your essay, you should 1) describe the drawing briefly, 2) explain its intended meaning, and 3) give your comments. You should write neatly on ANSWER SHEET 2. (20 points)","prompt_zh":"52. 说明：\n请根据下面的图画写一篇 160–200 词的短文。文中你应当：1）简要描述图画；2）解释其含义；3）给出你的评论。\n请工整地写在答题卡 2 上。（20 分）","thesis_en":"it is precisely our mindsets/attitudes, rather than anything else, that truly matter when we confront various situations in our life.","thesis_zh":"当我们面对生活的各种情况时，真正重要的是我们的心态而不是其他。","recommend_reasons":["1 社会经济科技","4 社会风气","5 社会思想转变"],"genre":"picture","word_target":200},{"year":2013,"kind":"现象类","topic":"大学生就业方向","caption":"选择（大学毕业生面临多种选择）（画面：一名大学毕业生站在岔路口前犹豫不决，面前几条路分别通向\"考研/出国深造/就业/创业\"等不同选择）","caption_plain":"选择（大学毕业生面临多种选择）","caption_en":"a college graduate standing at a crossroads, hesitating among further study, employment and starting a business","caption_word_en":"","topic_en":"career choice","prompt_en":"52. Directions: Write an essay of 160-200 words based on the following drawing. In your essay, you should 1) describe the drawing briefly, 2) interpret its intended meaning, and 3) give your comments. You should write neatly on the ANSWER SHEET. (20 points)","prompt_zh":"52. 说明：\n请根据下面的图画写一篇 160–200 词的短文。文中你应当：1）简要描述图画；2）解释其含义；3）给出你的评论。\n请工整地写在答题卡上。（20 分）","thesis_en":"modern college students aim at two major orientations when navigating their future life path:furthering their education or entering the workplace.","thesis_zh":"现代大学生在定位未来的人生道路时有两个主要的方向：继续教育或者进入职场。","recommend_reasons":["1 社会经济科技","4 社会风气","5 社会思想转变"],"genre":"picture","word_target":200},{"year":2014,"kind":"哲理品质类","topic":"家庭陪伴","caption":"相携（画面：一位子女搀扶着年迈的母亲（家人相互依偎、彼此扶持地走在路上），画面题为\"相携\"）","caption_plain":"相携","caption_en":"a grown-up child supporting an aged mother as the two of them walk slowly along the road","caption_word_en":"Supporting Each Other","topic_en":"family support","prompt_en":"52. Directions: Write an essay of 160-200 words based on the following drawing. In your essay, you should 1) describe the drawing briefly, 2) interpret its intended meaning, and 3) give your comments. You should write neatly on the ANSWER SHEET. (20 points)","prompt_zh":"52. 说明：\n请根据下面的图画写一篇 160–200 词的短文。文中你应当：1）简要描述图画；2）解释其含义；3）给出你的评论。\n请工整地写在答题卡上。（20 分）","thesis_en":"no one's happiness or personal growth would be attainable without the company and support from family.","thesis_zh":"一个人的幸福和成长几乎是不可能实现的，如果没有家人的支持和陪伴。","recommend_reasons":["1 社会经济科技","4 社会风气","5 社会思想转变"],"genre":"picture","word_target":200},{"year":2015,"kind":"现象类","topic":"沟通","caption":"手机时代的聚会（画面：一张餐桌旁坐着一群朋友聚餐，但每个人都低头盯着自己的手机，彼此之间没有交谈——题为\"手机时代的聚会\"）","caption_plain":"手机时代的聚会","caption_en":"a group of friends sitting around a dinner table, each of them staring at a mobile phone instead of talking to one another","caption_word_en":"A Party in the Mobile Era","topic_en":"face-to-face communication","prompt_en":"52. Directions: Write an essay of 160-200 words based on the following picture. In your essay, you should 1) describe the picture briefly, 2) interpret its intended meaning, and 3) give your comments. You should write neatly on the ANSWER SHEET. (20 points)","prompt_zh":"52. 说明：\n请根据下面的图画写一篇 160–200 词的短文。文中你应当：1）简要描述图画；2）解释其含义；3）给出你的评论。\n请工整地写在答题卡上。（20 分）","thesis_en":"human beings are a social species that relies on communication to survive and thrive, which forms the cornerstone of both our lives and society.","thesis_zh":"人类是一个依赖沟通交流生存和发展的社会物种，这形成了我们生活社会的基石。","recommend_reasons":["1 社会经济科技","4 社会风气","5 社会思想转变"],"genre":"picture","word_target":200},{"year":2016,"kind":"哲理品质类","topic":"以身作则","caption":"与其只提要求，不如做个榜样（画面：两幅对比图：左图父亲瘫在沙发上玩手机、却命令孩子去学习；右图父亲放下手机，和孩子一起坐在书桌前读书——\"与其只提要求，不如做个榜样\"）","caption_plain":"与其只提要求，不如做个榜样","caption_en":"two contrasting pictures: in the left one a father orders his son to study while playing with his own phone, while in the right one he sits down and reads together with his son","caption_word_en":"Set an Example Rather Than Make Demands","topic_en":"practising what one preaches","prompt_en":"52. Directions: Write an essay of 160-200 words based on the following pictures. In your essay, you should 1) describe the pictures briefly, 2) interpret the meaning, and 3) give your comments. You should write neatly on the ANSWER SHEET. (20 points)","prompt_zh":"52. 说明：\n请根据下面的图写一篇 160–200 词的短文。文中你应当：1）简要描述图；2）解释其含义；3）给出你的评论。\n请工整地写在答题卡上。（20 分）","thesis_en":"practicing what one preaches is the most efficacious approach to family education.","thesis_zh":"以身作则（言行一致）是家庭教育最有效的方法。","recommend_reasons":["1 社会经济科技","4 社会风气","5 社会思想转变"],"genre":"picture","word_target":200},{"year":2017,"kind":"哲理品质类","topic":"知行合一","caption":"“有书”与“读书”——书架满书 vs 坐着读书（补充）（画面：两幅对比图：左图书架上摆满崭新的书，人却在旁边玩；右图只有一本书，人却坐下来认真阅读——\"有书\"与\"读书\"）","caption_plain":"“有书”与“读书”——书架满书 vs 坐着读书","caption_en":"two contrasting pictures: one shows a shelf full of new books that nobody reads, while the other shows a reader concentrating on a single book","caption_word_en":"Having Books and Reading Books","topic_en":"the unity of knowing and acting","prompt_en":"52. Directions: Write an essay of 160-200 words based on the following pictures. In your essay, you should 1) describe the pictures briefly, 2) interpret the meaning, and 3) give your comments. You should write neatly on the ANSWER SHEET. (20 points)","prompt_zh":"52. 说明：\n请根据下面的图写一篇 160–200 词的短文。文中你应当：1）简要描述图；2）解释其含义；3）给出你的评论。\n请工整地写在答题卡上。（20 分）","thesis_en":"the philosophy of \"the unity of knowing and acting\" holds a key position in personal growth and self-fulfillment.","thesis_zh":"“知行合一”的思想在个人成长和自我实现中起着重要作用。","recommend_reasons":["1 社会经济科技","4 社会风气","5 社会思想转变"],"genre":"picture","word_target":200},{"year":2018,"kind":"现象类","topic":"自我挑战/创新","caption":"知识新 给分高 重创新 易通过 有难度 作业少 …… …… / 选课进行时（画面：一名学生在选课：一边的课程标着\"知识新、给分高、重创新、易通过\"，另一边的课程标着\"有难度、作业少……\"，学生在\"选课进行时\"中纠结）","caption_plain":"知识新 给分高 重创新 易通过 有难度 作业少 …… …… / 选课进行时","caption_en":"a student choosing courses in front of a list where some courses are marked new, easy and high-scoring while others are marked difficult but rewarding","caption_word_en":"Choosing Courses","topic_en":"course selection","prompt_en":"52. Directions: Write an essay of 160-200 words based on the picture below. In your essay, you should 1) describe the picture briefly, 2) interpret the meaning, and 3) give your comments. You should write neatly on the ANSWER SHEET. (20 points)","prompt_zh":"52. 说明：\n请根据下面的图画写一篇 160–200 词的短文。文中你应当：1）简要描述图画；2）解释其含义；3）给出你的评论。\n请工整地写在答题卡上。（20 分）","thesis_en":"while keeping attentive to tangible achievements, such as grades, can yield short-term gains, the concomitant loss of self-challenge and innovation may incur long-term consequences.","thesis_zh":"虽然关注分数等切实成绩会带来短期收获，但同时缺失自我挑战和创新可能会引发长期后果。","recommend_reasons":["1 社会经济科技","4 社会风气","5 社会思想转变"],"genre":"picture","word_target":200},{"year":2019,"kind":"哲理品质类","topic":"坚定信念","caption":"累了！我不 / 爬了。 别呀！休息一 下再接着爬。 / 途中（画面：两人结伴登山途中：一人坐在地上说\"累了！我不爬了\"，另一人鼓励他\"别呀！休息一下再接着爬\"——画面题为\"途中\"）","caption_plain":"累了！我不 / 爬了。 别呀！休息一 下再接着爬。 / 途中","caption_en":"two hikers on their way up a mountain: one sits down and gives up, while the other encourages him to take a rest and keep climbing","caption_word_en":"On the Way","topic_en":"perseverance","prompt_en":"52. Directions: Write an essay of 160-200 words based on the picture below. In your essay, you should 1) describe the picture briefly, 2) interpret the implied meaning, and 3) give your comments. Write your answer on the ANSWER SHEET. (20 points)","prompt_zh":"52. 说明：\n请根据下面的图画写一篇 160–200 词的短文。文中你应当：1）简要描述图画；2）解释其含义；3）给出你的评论。\n请工整地写在答题卡上。（20 分）","thesis_en":"a steadfast conviction is the \"fuel station\" on our life journey.","thesis_zh":"一个坚定的信念是我们人生道路上的“加油站”。","recommend_reasons":["1 社会经济科技","4 社会风气","5 社会思想转变"],"genre":"picture","word_target":200},{"year":2020,"kind":"哲理品质类","topic":"执行力 vs 拖延","caption":"尽早完成才放心 不到最后不动手 / 习惯（画面：一名学生坐在书桌前的两种状态：左边写着\"尽早完成才放心\"，右边写着\"不到最后不动手\"——同一件事、两种习惯）","caption_plain":"尽早完成才放心 不到最后不动手 / 习惯","caption_en":"a student at a desk in two different states: one finishing the task early with relief, and the other putting everything off until the last minute","caption_word_en":"Habit: Finish Early and Feel Relieved","topic_en":"good time management","prompt_en":"52. Directions: Write an essay of 160-200 words based on the pictures below. In your essay, you should 1) describe the pictures briefly, 2) interpret the implied meaning, and 3) give your comments. Write your answer on the ANSWER SHEET. (20 points)","prompt_zh":"52. 说明：\n请根据下面的图写一篇 160–200 词的短文。文中你应当：1）简要描述图；2）解释其含义；3）给出你的评论。\n请工整地写在答题卡上。（20 分）","thesis_en":"execution and procrastination are analogous to twins with starkly different personalities, bringing divergent outcomes.","thesis_zh":"执行力和拖延症就像一对性格迥然不同的双胞胎，会带来不同的结果。","recommend_reasons":["1 社会经济科技","4 社会风气","5 社会思想转变"],"genre":"picture","word_target":200},{"year":2021,"kind":"哲理品质类","topic":"坚持热爱/独立思考","caption":"戏曲/京剧——男孩爱唱戏但同学不欢迎，父亲说“你喜欢就够了”（画面：一个男孩迷上戏曲（京剧），在校园里唱戏却被同学冷落；父亲对他说\"你喜欢就够了\"——面对他人眼光，坚持自己的兴趣）","caption_plain":"戏曲/京剧——男孩爱唱戏但同学不欢迎，父亲说“你喜欢就够了”","caption_en":"a boy who is keen on Peking Opera is ignored by his classmates, and his father tells him that it is enough that he enjoys it himself","caption_word_en":"Peking Opera","topic_en":"the courage to follow one’s own interest","prompt_en":"52. Directions: Write an essay of 160-200 words based on the picture below. In your e s s ay, yo u s h o u l d 1) describe the picture briefly, 2) interpret the implied meaning, and 3) give your comments. Write your answer on the ANSWER SHEET. (20 points)","prompt_zh":"52. 说明：\n请根据下面的图画写一篇 160–200 词的短文。文中你应当：1）简要描述图画；2）解释其含义；3）给出你的评论。\n请工整地写在答题卡上。（20 分）","thesis_en":"we are expected to resolutely follow our inner voice and not to be swayed by others' opinions and the external cacophony when we are pursuing interests and passions.","thesis_zh":"当我们在追求兴趣与热爱时，我们应当坚定地遵从内心的声音并且不被他人意见和外界嘈杂所动摇。","recommend_reasons":["1 社会经济科技","4 社会风气","5 社会思想转变"],"genre":"picture","word_target":200},{"year":2022,"kind":"现象类","topic":"广泛学习","caption":"校园讲座——两位学生对讲座态度相反（画面：一场校园讲座现场：两位学生态度截然相反，一位专心听讲并做笔记，另一位低头玩手机、一脸不屑）","caption_plain":"校园讲座——两位学生对讲座态度相反","caption_en":"two students at a campus lecture: one listens attentively and takes notes, while the other plays with his mobile phone with a sneer","caption_word_en":"","topic_en":"students’ attitude towards lectures","prompt_en":"52. Directions: Write an essay of 160-200 words based on the picture below. In your essay, you should 1) describe the picture briefly, 2) interpret the implied meaning, and 3) give your comments. Write your answer on the ANSWER SHEET. (20 points)","prompt_zh":"52. 说明：\n请根据下面的图画写一篇 160–200 词的短文。文中你应当：1）简要描述图画；2）解释其含义；3）给出你的评论。\n请工整地写在答题卡上。（20 分）","thesis_en":"extensive learning and intensive learning are equivalently pivotal in study, both in principle and in practice.","thesis_zh":"无论是在理论上还是在实践中，广泛学习和集中学习在学业中都同等重要。","recommend_reasons":["1 社会经济科技","4 社会风气","5 社会思想转变"],"genre":"picture","word_target":200},{"year":2023,"kind":"现象类","topic":"传统文化","caption":"端午节龙舟赛——“咱们村的龙舟赛是越办越好啦”（画面：端午节村里举行龙舟赛，河上龙舟竞渡、岸边村民围观欢呼，一位老人感叹\"咱们村的龙舟赛是越办越好啦\"——传统文化焕发活力）","caption_plain":"端午节龙舟赛——“咱们村的龙舟赛是越办越好啦”","caption_en":"a dragon-boat race held in a village on the Dragon Boat Festival, with boats racing on the river and villagers cheering on the bank","caption_word_en":"Our village's dragon-boat race is getting better and better","topic_en":"the revival of traditional culture","prompt_en":"52. Directions: Write an essay based on the picture below. In your essay, you should 1) describe the picture briefly, 2) interpret the implied meaning, and 3) give your comments. Write your answer in 160-200 words on the ANSWER SHEET. (20 points)","prompt_zh":"52. 说明：\n请根据下面的图画写一篇 160–200 词的短文。文中你应当：1）简要描述图画；2）解释其含义；3）给出你的评论。\n请工整地写在答题卡上。（20 分）","thesis_en":"greater emphasis has been put on the spiritual value of traditional culture and customs and people's cultural confidence is on a steady rise.","thesis_zh":"国家愈发重视传统文化习俗的精神价值并且人们的文化自信也在稳步提升。","recommend_reasons":["1 社会经济科技","4 社会风气","5 社会思想转变"],"genre":"picture","word_target":200},{"year":2024,"kind":"现象类","topic":"全民健身(图画+图表)","caption":"公园健身——年轻人在健身区锻炼 + 公园数量 406→670（画面：一座公园里，年轻人在健身区锻炼身体、老人和孩子在旁休闲；同时给出\"公园数量从 406 个增至 670 个\"的数据——健身与公共设施）","caption_plain":"公园健身——年轻人在健身区锻炼 + 公园数量 406→670","caption_en":"young people working out in the fitness area of a park, together with figures showing that the number of parks has risen from 406 to 670","caption_word_en":"","topic_en":"physical fitness","prompt_en":"52. Directions: Write an essay based on the picture and the chart below. In your essay, you should 1) describe the picture and the chart briefly, 2) interpret the implied meaning, and 3) give your comments. Write your answer in 160-200 words on the ANSWER SHEET. (20 points)","prompt_zh":"52. 说明：\n请根据下面的图表写一篇 160–200 词的短文。文中你应当：1）简要描述图表；2）解释其含义；3）给出你的评论。\n请工整地写在答题卡上。（20 分）","thesis_en":"greater emphasis has been put on the infrastructure of the National Fitness Program and people's health awareness is on a steady rise.","thesis_zh":"国家愈发重视全民健身计划的基础设施并且人们的健康意识也在稳步提升。","recommend_reasons":["1 社会经济科技","4 社会风气","5 社会思想转变"],"genre":"chart","word_target":200},{"year":2025,"kind":"现象类","topic":"消费升级(图表)","caption":"年份 空调（台） 洗衣机（台） 电冰箱（台） 2014 75.2 83.7 85.5 2017 96.1 91.7 95.3 2020 117.7 96.7 101.8 2023 145.9 98.2 103.4 近年来全国居民平均每百户年末主要耐用消费品拥有量（画面：一张表格：2014/2017/2020/2023 年全国居民平均每百户年末主要耐用消费品（空调、洗衣机、电冰箱）拥有量逐年上升（如空调 75.2→145.9 台）——生活水平提高）","caption_plain":"年份 空调（台） 洗衣机（台） 电冰箱（台） 2014 75.2 83.7 85.5 2017 96.1 91.7 95.3 2020 117.7 96.7 101.8 2023 145.9 98.2 103.4 近年来全国居民平均每百户年末主要耐用消费品拥有量","caption_en":"a table showing that the number of air conditioners, washing machines and refrigerators owned by every hundred urban households rose steadily from 2014 to 2023","caption_word_en":"","topic_en":"the improvement of living standards","prompt_en":"52. Directions: Write an essay of 160-200 based on the following table. In your essay, you should 1) describe the table briefly, 2) explain its intended meaning, and 3) give your comments. You should write neatly on the ANSWER SHEET. (20 points)","prompt_zh":"52. 说明：\n请根据下面的图表写一篇 160–200 词的短文。文中你应当：1）简要描述图表；2）解释其含义；3）给出你的评论。\n请工整地写在答题卡上。（20 分）","thesis_en":"a steady growth in household disposable income, fueled by economic boom and prosperity, has reshaped residents' consumption patterns, redefining 'quality of life' metrics.","thesis_zh":"在经济繁荣的推动下，家庭可支配收入稳步增长，这重塑了居民的消费模式，并且重新定义了“生活质量”指标。","recommend_reasons":["1 社会经济科技","4 社会风气","5 社会思想转变"],"genre":"chart","word_target":200},{"year":2026,"kind":"现象类","topic":"老年护理机器人(图表)","caption":"老年护理机器人调查——饼图 50%+ 接受，安全/价格/便利为关注点（画面：一份关于\"老年护理机器人\"的调查饼图：50% 以上的受访者表示接受，公众关注点集中在安全性、价格与使用便利性）","caption_plain":"老年护理机器人调查——饼图 50%+ 接受，安全/价格/便利为关注点","caption_en":"a pie chart of a survey on elderly-care robots, in which more than half of the respondents say they accept them, caring most about safety, price and convenience","caption_word_en":"","topic_en":"elderly care","prompt_en":"52. Directions: Write an essay based on the charts below. In your essay, you should 1) describe the charts briefly, 2) interpret the charts, and 3) give your comments. Write your answer in 160-200 words on the ANSWER SHEET. (20 points)","prompt_zh":"52. 说明：\n请根据下面的图表写一篇 160–200 词的短文。文中你应当：1）简要描述图表；2）解释其含义；3）给出你的评论。\n请工整地写在答题卡上。（20 分）","thesis_en":"the proliferation of emerging technologies has permeated every facet of daily life, with social security standing out as a primary beneficiary.","thesis_zh":"新兴技术的蓬勃发展已经渗透到日常生活的方方面面，而社会保障尤为突出，成为主要受益者。","recommend_reasons":["1 社会经济科技","4 社会风气","5 社会思想转变"],"genre":"chart","word_target":200}],"systems":{"鲁述钊":{"name":"鲁述钊","style":"齐头式（顶格、段间空行）","desc":"长难句 + 倒装多，第二段 For one thing / In the meantime … For another + 名人事例，第三段结论＋建议＋Only in this way","sections":[{"key":"p1_describe","p":1,"label":"第一段：描述图画/图表","ids":["lsz_p1_describe_pic","lsz_p1_describe_chart"],"required":true,"hint":"3 句：总体场景 → 细节 → 关键处（图表题用图表描述句）"},{"key":"p2_thesis","p":2,"label":"第二段①：主旨句（点明寓意）","ids":["lsz_p2_thesis1","lsz_p2_thesis2","lsz_p2_thesis3","lsz_p2_thesis4"],"required":true,"hint":"这一段是阅卷核心判分点，必须点出图画寓意"},{"key":"p2_lead","p":2,"label":"第二段②：原因总起","ids":["lsz_p2_reason_lead"],"required":true},{"key":"p2_reason1","p":2,"label":"第二段③：一方面","ids":["lsz_p2_reason_one","lsz_p2_contrast"],"required":true},{"key":"p2_reason2","p":2,"label":"第二段④：另一方面","ids":["lsz_p2_reason_two"],"required":true},{"key":"p2_example","p":2,"label":"第二段⑤：例证（名人/事例）","ids":["lsz_p2_example"],"required":false,"hint":"加一个具体例子能明显提分（马龙/谷爱凌/袁隆平…）"},{"key":"p3_conclusion","p":3,"label":"第三段①：结论","ids":["lsz_p3_conclusion","lsz_p3_conclusion2"],"required":true},{"key":"p3_importance","p":3,"label":"第三段②：强调重要性","ids":["lsz_p3_importance"],"required":false},{"key":"p3_suggest","p":3,"label":"第三段③：建议","ids":["lsz_p3_suggest"],"required":true},{"key":"p3_quote","p":3,"label":"第三段④：引用名言（可选）","ids":["lsz_p3_quote"],"required":false},{"key":"p3_only","p":3,"label":"第三段⑤：Only in this way 展望","ids":["lsz_p3_only"],"required":true}]},"王晶婷":{"name":"王晶婷","style":"齐头式（顶格、段间空行）","desc":"第一段 9 种总体描述＋细节＋图文字；第二段主旨句＋十大万能原因选 2–3；第三段总结＋六大建议＋展望","sections":[{"key":"p1_s1","p":1,"label":"第一段①：总体描述","ids":["wjt_p1_s1_3","wjt_p1_s1_1","wjt_p1_s1_1L","wjt_p1_s1_5","wjt_p1_s1_9","wjt_p1_s1_7","wjt_p1_s1_8","wjt_p1_s1_5b","wjt_p1_s1_4","wjt_p1_chart_s1","wjt_p1_chart_s2"],"required":true},{"key":"p1_s23","p":1,"label":"第一段②：细节描述","ids":["wjt_p1_s23","wjt_p1_s23_1","wjt_p1_s23b"],"required":true},{"key":"p1_s4","p":1,"label":"第一段③：图文字 caption","ids":["wjt_p1_s4_1","wjt_p1_s4_1_1","wjt_p1_s4_2","wjt_p1_s4_3"],"required":false,"hint":"大题忌\"第一段漏写图文字\"，有文字就写"},{"key":"p2_s1","p":2,"label":"第二段①：主旨句","ids":["wjt_p2_s1_1_1","wjt_p2_s1_1","wjt_p2_s1_2","wjt_p2_s1_3","wjt_p2_s1_5"],"required":true,"hint":"核心判分点：必须点出图画寓意"},{"key":"p2_lead","p":2,"label":"第二段②：原因总起","ids":["wjt_p2_lead","wjt_p2_lead2"],"required":true},{"key":"p2_reason1","p":2,"label":"第二段③：万能原因一","ids":["wjt_r_tech","wjt_r_global","wjt_r_money","wjt_r_mood","wjt_r_shift"],"required":true},{"key":"p2_reason2","p":2,"label":"第二段④：万能原因二","ids":["wjt_r_culture","wjt_r_gov","wjt_r_media","wjt_r_person","wjt_r_crisis"],"required":true},{"key":"p2_reason3","p":2,"label":"第二段⑤：万能原因三（可选）","ids":["wjt_r_shift","wjt_r_media","wjt_r_person","wjt_auto_086"],"required":false},{"key":"p3_s1","p":3,"label":"第三段①：总结","ids":["wjt_p3_s1_1","wjt_auto_139","wjt_auto_141","wjt_auto_138"],"required":true},{"key":"p3_s2","p":3,"label":"第三段②：建议","ids":["wjt_auto_145","wjt_auto_143","wjt_auto_150","wjt_auto_159","wjt_auto_160","wjt_auto_161","wjt_auto_154","wjt_auto_163","wjt_auto_152"],"required":true},{"key":"p3_s3","p":3,"label":"第三段③：展望","ids":["wjt_p3_s3","wjt_auto_175","wjt_auto_183","wjt_auto_185","wjt_auto_179","wjt_auto_165","wjt_auto_170"],"required":true}]},"DeepSeek":{"name":"DeepSeek","style":"齐头式（顶格、段间空行）","desc":"AI 自编三段模板：一眼抓住画面 → 一句点透寓意 → 两条原因＋一个例子 → 一条落地建议＋Only in this way 收尾","author":"DeepSeek AI 原创（不取自任何讲义，可自由使用）","sections":[{"key":"p1_s1","p":1,"label":"第一段①：总体描述","ids":["ds_p1_open_1","ds_p1_open_2","ds_p1_open_3","ds_p1_open_4","ds_p1_chart_1","ds_p1_chart_2"],"required":true,"hint":"一句话交代\"图里发生了什么\"，不要一上来就议论"},{"key":"ds_p1_detail","p":1,"label":"第一段②：细节/对比","ids":["ds_p1_detail_1","ds_p1_detail_2","ds_p1_detail_3"],"required":true},{"key":"ds_p1_caption","p":1,"label":"第一段③：图文字 caption","ids":["ds_p1_caption_1","ds_p1_caption_2"],"required":false,"hint":"图里有字就写，阅卷老师会看这一句"},{"key":"ds_p2_thesis","p":2,"label":"第二段①：点透寓意（主旨句）","ids":["ds_p2_thesis_1","ds_p2_thesis_2","ds_p2_thesis_3","ds_p2_thesis_4"],"required":true,"hint":"全文最重要的一句：把画面翻译成\"道理\""},{"key":"ds_p2_lead","p":2,"label":"第二段②：原因总起","ids":["ds_p2_lead_1","ds_p2_lead_2","ds_p2_lead_3"],"required":true},{"key":"ds_p2_reason1","p":2,"label":"第二段③：原因一","ids":["ds_p2_reason_1"],"required":true},{"key":"ds_p2_reason2","p":2,"label":"第二段④：原因二","ids":["ds_p2_reason_2","ds_p2_reason_3"],"required":true},{"key":"ds_p2_example","p":2,"label":"第二段⑤：具体例子（强烈建议写）","ids":["ds_p2_example_1","ds_p2_example_2"],"required":false,"hint":"一个具体的人或事例，比三句空话都管用"},{"key":"ds_p3_conclusion","p":3,"label":"第三段①：结论","ids":["ds_p3_conclusion_1","ds_p3_conclusion_2"],"required":true},{"key":"ds_p3_suggest","p":3,"label":"第三段②：落地建议","ids":["ds_p3_suggest_1","ds_p3_suggest_2","ds_p3_suggest_3"],"required":true},{"key":"ds_p3_outlook","p":3,"label":"第三段③：展望收尾","ids":["ds_p3_outlook_1","ds_p3_outlook_2","ds_p3_outlook_3"],"required":true,"hint":"Only in this way can we… 是稳妥的高分收尾"}]}},"sentences":[{"id":"lsz_p1_describe_pic","source":"鲁述钊","group":"第一段·图画描述","function":"图画总体+细节（整句可替换）","en":"This uncomplicated picture with a thought-provoking message depicts a lively scene {{scene}}. In the cartoon, {{detail}}. What positively claims our attention is that {{focus}}.","zh":"第一段：总体 → 细节 → 焦点（引用图内文字）","curated":true,"slots":["scene","detail","focus"],"source_page":"lusz_fanwen"},{"id":"lsz_p1_describe_chart","source":"鲁述钊","group":"第一段·图表描述","function":"图表总体+数据（整句可替换）","en":"Observably, the data-backed chart with insightful details presents {{survey}}. As is statistically indicated, {{data1}}, and {{data2}}. What captures our attention is that {{data3}}.","zh":"图表作文第一段：调查主题 → 数据 1/2 → 最醒目数据","curated":true,"slots":["survey","data1","data2","data3"],"source_page":"lusz_fanwen"},{"id":"lsz_p2_thesis1","source":"鲁述钊","group":"第二段·主旨句","function":"揭示寓意（truth that）","en":"Without a shadow of a doubt, the picture intends to inform us of the sobering revelation that {{thesis}}.","zh":"图画第二段第一句；thesis 为本年主旨句（见 zhuzhi_bank）","curated":true,"slots":["thesis"],"source_page":"lusz_fanwen"},{"id":"lsz_p2_thesis2","source":"鲁述钊","group":"第二段·主旨句","function":"强调内涵（so pronounced that）","en":"So pronounced is the connotation behind the picture that no one would fail to realize the forceful truth that {{thesis}}.","zh":"倒装强调式；适合哲理品质类","curated":true,"slots":["thesis"],"source_page":"lusz_fanwen"},{"id":"lsz_p2_thesis3","source":"鲁述钊","group":"第二段·主旨句","function":"数据图表（behind the numbers）","en":"Incontrovertibly, behind the numbers in the charts lies a core implication that {{thesis}}.","zh":"图表作文第二段第一句","curated":true,"slots":["thesis"],"source_page":"lusz_fanwen"},{"id":"lsz_p2_thesis4","source":"鲁述钊","group":"第二段·主旨句","function":"图片+数据（each of us is supposed to）","en":"Beyond any doubt, each and every one of us is supposed to fathom the purport of the pictures that {{thesis}}.","zh":"图画+图表组合","curated":true,"slots":["thesis"],"source_page":"lusz_fanwen"},{"id":"lsz_p2_reason_lead","source":"鲁述钊","group":"第二段·原因总起","function":"总起过渡","en":"A cascade of explanations is as follows.","zh":"引出两方面原因","curated":true,"source_page":"lusz_fanwen"},{"id":"lsz_p2_reason_lead_1","source":"鲁述钊","group":"第二段·原因总起","function":"总起过渡","en":"A series of explanations is as follows.","zh":"引出两方面原因","curated":true,"source_page":"lusz_fanwen"},{"id":"lsz_p2_reason_one","source":"鲁述钊","group":"第二段·一方面","function":"For one thing 原因一","en":"For one thing, {{reason1}}.","zh":"一方面：写第一条原因（可用十大万能原因）","curated":true,"slots":["reason1"],"source_page":"lusz_fanwen"},{"id":"lsz_p2_reason_two","source":"鲁述钊","group":"第二段·另一方面","function":"For another 原因二","en":"In the meantime, should {{condition}}, {{consequence}}. For another, {{reason2}}.","zh":"另一方面：可含虚拟语气（should ... would ...）","curated":true,"slots":["condition","consequence","reason2"],"source_page":"lusz_fanwen"},{"id":"lsz_p2_example","source":"鲁述钊","group":"第二段·例证","function":"名人事例句","en":"An epitome to the point would be {{person}}. It is precisely {{cause}} that have empowered {{person}} to {{result}}.","zh":"用名人（马龙/谷爱凌等）例证","curated":true,"slots":["person","cause","result"],"source_page":"lusz_fanwen"},{"id":"lsz_p3_conclusion","source":"鲁述钊","group":"第三段·结论","function":"结论句","en":"Given the aforementioned discussion, a pertinent conclusion can be drawn that {{conclusion}}.","zh":"第三段第一句（最常用）","curated":true,"slots":["conclusion"],"source_page":"lusz_fanwen"},{"id":"lsz_p3_conclusion2","source":"鲁述钊","group":"第三段·结论","function":"To conclude 版","en":"To conclude, {{conclusion}}. However, what matters more is our endeavor and commitment.","zh":"第三段第一句变体","curated":true,"slots":["conclusion"],"source_page":"lusz_fanwen"},{"id":"lsz_p3_importance","source":"鲁述钊","group":"第三段·强调","function":"重要性不可高估","en":"Moreover, the significance of {{topic}} can never be overstated.","zh":"承接结论句","curated":true,"slots":["topic"],"source_page":"lusz_fanwen"},{"id":"lsz_p3_suggest","source":"鲁述钊","group":"第三段·建议","function":"One feasible suggestion","en":"One feasible suggestion is that {{subject}} {{action}}.","zh":"第三段建议句","curated":true,"slots":["subject","action"],"source_page":"lusz_fanwen"},{"id":"lsz_p3_only","source":"鲁述钊","group":"第三段·展望","function":"Only in this way 收尾","en":"Only in this way are we bound to {{goal}}.","zh":"全文最后一句（倒装）","curated":true,"slots":["goal"],"source_page":"lusz_fanwen"},{"id":"lsz_p3_quote","source":"鲁述钊","group":"第三段·引用","function":"名言收尾","en":"Just as {{person}} puts it, “{{quote}}”.","zh":"用名言收尾（可替代建议句）","curated":true,"slots":["person","quote"],"source_page":"lusz_fanwen"},{"id":"lsz_p2_contrast","source":"鲁述钊","group":"第二段·对比论述","function":"On the one hand / On the other hand","en":"On the one hand, {{side1}}. On the other hand, {{side2}}.","zh":"利弊对比型（如 AI 机器人）","curated":true,"slots":["side1","side2"],"source_page":"lusz_fanwen"},{"id":"lsz_p2_data_note","source":"鲁述钊","group":"第二段·趋势描述","function":"数据趋势说明","en":"As is statistically indicated, the number of {{item}} climbed from {{from}} to {{to}} over {{period}}.","zh":"图表趋势（升/降）","curated":true,"slots":["item","from","to","period"],"source_page":"lusz_fanwen"},{"id":"wjt_p1_s1_1","source":"王晶婷","group":"第一段第1句·总体描述","function":"选择1","en":"The drawing, depicting {{phenomenon}} phenomenon, greatly impresses us.","zh":"这幅图描绘了关于××的现象","curated":true,"slots":["phenomenon"],"source_page":7},{"id":"wjt_p1_s1_1L","source":"王晶婷","group":"第一段第1句·总体描述","function":"选择1 长句","en":"What an impressive drawing it is, depicting one of the most widespread social phenomena related to {{topic}}.","zh":"感叹句+定语","curated":true,"slots":["topic"],"source_page":7},{"id":"wjt_p1_s1_2","source":"王晶婷","group":"第一段第1句·总体描述","function":"选择2 达摩克利斯之剑","en":"The overlooked phenomenon of {{topic}} hangs over humankind like the Sword of Damocles.","zh":"被忽视现象如达摩克利斯之剑","curated":true,"slots":["topic"],"source_page":8},{"id":"wjt_p1_s1_3","source":"王晶婷","group":"第一段第1句·总体描述","function":"选择3","en":"Portrayed in the above drawing is {{sth}}.","zh":"上图中描述了……","curated":true,"slots":["sth"],"source_page":9},{"id":"wjt_p1_s1_3_1","source":"王晶婷","group":"第一段第1句·总体描述","function":"选择3","en":"Portrayed in the above drawing are {{sth}}.","zh":"上图中描述了……","curated":true,"slots":["sth"],"source_page":9},{"id":"wjt_p1_s1_4","source":"王晶婷","group":"第一段第1句·总体描述","function":"选择4 虚拟语气","en":"Were it not for the drawing above, a thought-provoking phenomenon would be overlooked: {{sentence}}.","zh":"要不是看到图，现象会被忽视","curated":true,"slots":["sentence"],"source_page":10},{"id":"wjt_p1_s1_5","source":"王晶婷","group":"第一段第1句·总体描述","function":"选择5-9 场景代入","en":"Depicted in the drawing is such a scene: {{sentence}}.","zh":"图中描绘了这样的场景","curated":true,"slots":["sentence"],"source_page":11},{"id":"wjt_p1_s1_5b","source":"王晶婷","group":"第一段第1句·总体描述","function":"选择6 双图","en":"What is depicted in these drawings is a series of scenes: {{sentence}}.","zh":"两幅图用复数","curated":true,"slots":["sentence"],"source_page":12},{"id":"wjt_p1_s1_7","source":"王晶婷","group":"第一段第1句·总体描述","function":"选择7","en":"A remarkable and significant image comes into our view: {{sentence}}.","zh":"映入眼帘","curated":true,"slots":["sentence"],"source_page":13},{"id":"wjt_p1_s1_8","source":"王晶婷","group":"第一段第1句·总体描述","function":"选择8","en":"Before us lies an illuminating scene: {{sentence}}.","zh":"展现在眼前","curated":true,"slots":["sentence"],"source_page":14},{"id":"wjt_p1_s1_9","source":"王晶婷","group":"第一段第1句·总体描述","function":"选择9","en":"Shown in the drawing is an eye-catching scene: {{sentence}}.","zh":"引人注目场景","curated":true,"slots":["sentence"],"source_page":15},{"id":"wjt_p1_s23","source":"王晶婷","group":"第一段第2-3句·细节描述","function":"人物动作（中心人物）","en":"Sitting in front of {{place}} is a {{person}}, who {{detail}}.","zh":"细节描写句式：人物+动作+周边","curated":true,"slots":["place","person","doing","detail"],"source_page":16},{"id":"wjt_p1_s23_1","source":"王晶婷","group":"第一段第2-3句·细节描述","function":"人物动作（中心人物）","en":"Standing in front of {{place}} is a {{person}}, who {{detail}}.","zh":"细节描写句式：人物+动作+周边","curated":true,"slots":["place","person","doing","detail"],"source_page":16},{"id":"wjt_p1_s23b","source":"王晶婷","group":"第一段第2-3句·细节描述","function":"双图对比","en":"In the left picture, {{left}}. Conversely, in the right picture, {{right}}.","zh":"两图对比","curated":true,"slots":["left","right"],"source_page":18},{"id":"wjt_p1_s4_1","source":"王晶婷","group":"第一段第4句·图文字","function":"选择1","en":"The caption reads {{caption}}.","zh":"标题是……","curated":true,"slots":["caption"],"source_page":22},{"id":"wjt_p1_s4_1_1","source":"王晶婷","group":"第一段第4句·图文字","function":"选择1","en":"The caption says {{caption}}.","zh":"标题是……","curated":true,"slots":["caption"],"source_page":22},{"id":"wjt_p1_s4_2","source":"王晶婷","group":"第一段第4句·图文字","function":"选择2","en":"At the bottom of the drawing is the caption: {{caption}}.","zh":"图画下方有标题","curated":true,"slots":["caption"],"source_page":23},{"id":"wjt_p1_s4_3","source":"王晶婷","group":"第一段第4句·图文字","function":"选择3","en":"At the bottom of the picture, a sentence stands there prominently, and it says that {{caption}}.","zh":"显眼句子","curated":true,"slots":["caption"],"source_page":24},{"id":"wjt_p1_chart_s1","source":"王晶婷","group":"第一段第1句·图表总体","function":"选择2 图表类型","en":"The bar chart clearly shows {{content}}.","zh":"按图表类型选用动词","curated":true,"slots":["content"],"source_page":32},{"id":"wjt_p1_chart_s1_1","source":"王晶婷","group":"第一段第1句·图表总体","function":"选择2 图表类型","en":"The pie chart clearly shows {{content}}.","zh":"按图表类型选用动词","curated":true,"slots":["content"],"source_page":32},{"id":"wjt_p1_chart_s1_2","source":"王晶婷","group":"第一段第1句·图表总体","function":"选择2 图表类型","en":"The table clearly shows {{content}}.","zh":"按图表类型选用动词","curated":true,"slots":["content"],"source_page":32},{"id":"wjt_p1_chart_s1_3","source":"王晶婷","group":"第一段第1句·图表总体","function":"选择2 图表类型","en":"The line chart clearly shows {{content}}.","zh":"按图表类型选用动词","curated":true,"slots":["content"],"source_page":32},{"id":"wjt_p1_chart_s2","source":"王晶婷","group":"第一段第1句·图表总体","function":"选择5 数据呈现","en":"Emerging from the chart above are these statistics: {{data}}.","zh":"数据呈现（倒装）","curated":true,"slots":["data"],"source_page":35},{"id":"wjt_p2_s1_1","source":"王晶婷","group":"第二段第1句·主旨句","function":"选择1 直到看到这幅图","en":"It was not until I saw the drawing that I realized the significance of {{topic}}.","zh":"推荐首选","curated":true,"slots":["topic","sentence"],"source_page":4},{"id":"wjt_p2_s1_1_1","source":"王晶婷","group":"第二段第1句·主旨句","function":"选择1 直到看到这幅图","en":"It was not until I saw the drawing that I realized the fact that {{thesis}}.","zh":"推荐首选","curated":true,"slots":["topic","sentence"],"source_page":4},{"id":"wjt_p2_s1_2","source":"王晶婷","group":"第二段第1句·主旨句","function":"选择2 简单却深刻","en":"Simple as the picture is, it conveys profound implications. It emphasizes the importance of {{topic}} and encourages people to value it, which I explain as follows.","zh":"简洁有力","curated":true,"slots":["topic"],"source_page":5},{"id":"wjt_p2_s1_3","source":"王晶婷","group":"第二段第1句·主旨句","function":"选择3 传递信息","en":"This thought-provoking picture aims to convey the message that the key to success is {{topic}}, which can be explained by the following information.","zh":"success is X 句式","curated":true,"slots":["topic"],"source_page":6},{"id":"wjt_p2_s1_5","source":"王晶婷","group":"第二段第1句·主旨句","function":"选择5 直击核心问题","en":"This drawing highlights a core issue in today's society: the phenomenon of {{topic}}, whose causes are listed as follows.","zh":"问题类","curated":true,"slots":["topic"],"source_page":8},{"id":"wjt_p2_lead","source":"王晶婷","group":"第二段第2句·原因总起","function":"总起","en":"The fundamental factors contributing to the above trend can be explained as follows.","zh":"原因总起（最常用）","curated":true,"source_page":12},{"id":"wjt_p2_lead2","source":"王晶婷","group":"第二段第2句·原因总起","function":"三方面概括","en":"The major determinants can be summarized from at least the following three aspects.","zh":"三方面","curated":true,"source_page":13},{"id":"wjt_p3_s1_1","source":"王晶婷","group":"第三段第1句·总结","function":"选择1 考虑到所讨论","en":"Considering the above discussion, we can conclude that {{topic}} is of vital importance and more actions are needed.","zh":"第三段总结","curated":true,"slots":["topic"],"source_page":4},{"id":"wjt_p3_s3","source":"王晶婷","group":"第三段第3句·展望","function":"下结论+展望","en":"To sum up, only by {{action}} can we {{goal}}.","zh":"展望收尾","curated":true,"slots":["action","goal"],"source_page":29},{"id":"wjt_auto_066","source":"王晶婷","curated":false,"group":"第二段·十大万能原因","function":"","en":"Society and technology have made remarkable progress in recent years.","zh":"","source_page":18,"raw_section":"第二段第2-4句·十大万能原因"},{"id":"wjt_auto_067","source":"王晶婷","curated":false,"group":"第二段·十大万能原因","function":"","en":"Hardly a week goes by without notable advances in technology and society--progress that would have seemed incredible many years ago.","zh":"","source_page":18,"raw_section":"第二段第2-4句·十大万能原因"},{"id":"wjt_auto_070","source":"王晶婷","curated":false,"group":"第二段·十大万能原因","function":"","en":"Advanced technologies empower people to transmit more information to more locations at an unprecedented speed.","zh":"","source_page":20,"raw_section":"第二段第2-4句·十大万能原因"},{"id":"wjt_auto_071","source":"王晶婷","curated":false,"group":"第二段·十大万能原因","function":"","en":"Coincident with the growing quantity of information is the development of technologies which enable the delivery of more information with greater speed to more locations than has ever been possible before.","zh":"","source_page":20,"raw_section":"第二段第2-4句·十大万能原因"},{"id":"wjt_auto_080","source":"王晶婷","curated":false,"group":"第二段·十大万能原因","function":"","en":"Their improper conduct stems from self-interest, coupled with an obsession with the huge profits they reap.","zh":"","source_page":29,"raw_section":"第二段第2-4句·十大万能原因"},{"id":"wjt_auto_081","source":"王晶婷","curated":false,"group":"第二段·十大万能原因","function":"","en":"Probably, these individuals' blameworthy behavior can be interpreted by their lack of knowledge of {{topic}}. The root cause, however, lies in the fact that their consciences yield to selfishness.","zh":"","source_page":29,"raw_section":"第二段第2-4句·十大万能原因"},{"id":"wjt_auto_082","source":"王晶婷","curated":false,"group":"第二段·十大万能原因","function":"","en":"Such praiseworthy acts lie in the fact that they stick to moral principles and never covet the substantial profits from {{action}}.","zh":"","source_page":30,"raw_section":"第二段第2-4句·十大万能原因"},{"id":"wjt_auto_083","source":"王晶婷","curated":false,"group":"第二段·十大万能原因","function":"","en":"These individuals' gratifying behavior can be explained by their deep appreciation of {{topic}}. The root cause, however, lies in the fact that their consciences never yield to selfishness.","zh":"","source_page":30,"raw_section":"第二段第2-4句·十大万能原因"},{"id":"wjt_auto_085","source":"王晶婷","curated":false,"group":"第二段·十大万能原因","function":"选择2","en":"The decline of morality suggests another factor to the trend mentioned above.","zh":"","source_page":34,"raw_section":"第二段第2-4句·十大万能原因"},{"id":"wjt_auto_086","source":"王晶婷","curated":false,"group":"第二段·十大万能原因","function":"选择2","en":"The decline of morality in the 21st century, along with the consequent damage to a harmonious society, serves as another factor contributing to the aforementioned trend.","zh":"","source_page":34,"raw_section":"第二段第2-4句·十大万能原因"},{"id":"wjt_auto_088","source":"王晶婷","curated":false,"group":"第二段·十大万能原因","function":"选择4","en":"The stress of modern life has driven people to prioritize profit, neglecting the value of {{topic}}.","zh":"","source_page":36,"raw_section":"第二段第2-4句·十大万能原因"},{"id":"wjt_auto_092","source":"王晶婷","curated":false,"group":"第二段·十大万能原因","function":"选择1","en":"As cultures integrate and ethical standards improve, people begin to attach importance to {{topic}}, and all these concepts jointly shape our lives.","zh":"","source_page":38,"raw_section":"第二段第2-4句·十大万能原因"},{"id":"wjt_auto_093","source":"王晶婷","curated":false,"group":"第二段·十大万能原因","function":"","en":"As environmental protection advances and ecological awareness improve, people begin to attach importance to nature and sustainability. All these concepts jointly shape our lives.","zh":"","source_page":39,"raw_section":"第二段第2-4句·十大万能原因"},{"id":"wjt_auto_094","source":"王晶婷","curated":false,"group":"第二段·十大万能原因","function":"","en":"The momentum of environmental protection becoming irresistible, gone are the days when people turned a deaf ear to nature protection. Now ecological responsibility and environmental awareness, critical to sustainable development/ human survival, are definitely part and parcel of our life.","zh":"","source_page":40,"raw_section":"第二段第2-4句·十大万能原因"},{"id":"wjt_auto_138","source":"王晶婷","curated":false,"group":"第三段第1句·总结","function":"选择1","en":"Altogether, (effective) measures should be taken to reverse the grim situation.","zh":"","source_page":6,"raw_section":"第三段第1句·总结全文"},{"id":"wjt_auto_139","source":"王晶婷","curated":false,"group":"第三段第1句·总结","function":"选择1","en":"As has been mentioned above, countermeasures should be taken (immediately) so as to reverse the grim situation.","zh":"","source_page":6,"raw_section":"第三段第1句·总结全文"},{"id":"wjt_auto_141","source":"王晶婷","curated":false,"group":"第三段第1句·总结","function":"选择2","en":"Altogether, concrete measures and strategies to control and ward off the phenomenon above can be proposed as follows.","zh":"","source_page":7,"raw_section":"第三段第1句·总结全文"},{"id":"wjt_auto_143","source":"王晶婷","curated":false,"group":"第三段第1句·总结","function":"选择1","en":"The fundamental solution to this problem is to promote social morality education and to {{action}}.","zh":"","source_page":11,"raw_section":"第三段第1句·总结全文"},{"id":"wjt_auto_145","source":"王晶婷","curated":false,"group":"第三段第1句·总结","function":"选择2","en":"A comprehensive educational initiative must be launched to inform citizens that adhering to proper rules is fundamentally beneficial to societal well-being.","zh":"必须开展全面的教育活动，让公民知道遵守适当的规则从根本上有利于社会 福祉。","source_page":12,"raw_section":"第三段第1句·总结全文"},{"id":"wjt_auto_150","source":"王晶婷","curated":false,"group":"第三段第2句·六大建议","function":"","en":"The key to solving this problem is to promote social morality education, enabling people to {{action}}.","zh":"","source_page":19,"raw_section":"第三段第2句·六大万能建议"},{"id":"wjt_auto_151","source":"王晶婷","curated":false,"group":"第三段第2句·六大建议","function":"","en":"The key to tackling this problem is not strict punitive measures, but proactive extensive education that {{action}}.","zh":"","source_page":19,"raw_section":"第三段第2句·六大万能建议"},{"id":"wjt_auto_152","source":"王晶婷","curated":false,"group":"第三段第2句·六大建议","function":"选择1","en":"The enactment and strict enforcement of laws to address uncivilized behaviour should be a top governmental priority, so that {{goal}}.","zh":"制定并严格执行法律，用以整治违背公共道德的各类行为——无论这类行 为是举止失当还是缺乏文明素养——都应是政府的首要任务。","source_page":22,"raw_section":"第三段第2句·六大万能建议"},{"id":"wjt_auto_153","source":"王晶婷","curated":false,"group":"第三段第2句·六大建议","function":"选择2","en":"Relevant regulations should be established to severely punish those who violate {{topic}}-related rules.","zh":"应该建立相关法规来严厉惩罚那些故意违反 ____ 规则的人，无论是 ____ 还 是 ____。","source_page":22,"raw_section":"第三段第2句·六大万能建议"},{"id":"wjt_auto_154","source":"王晶婷","curated":false,"group":"第三段第2句·六大建议","function":"选择3","en":"The school authorities should invest more resources and funding in {{action}}.","zh":"","source_page":23,"raw_section":"第三段第2句·六大万能建议"},{"id":"wjt_auto_155","source":"王晶婷","curated":false,"group":"第三段第2句·六大建议","function":"选择3","en":"Only when the government becomes a major investor in {{topic}} does the well-being of the younger and elder generations increase substantially.","zh":"","source_page":23,"raw_section":"第三段第2句·六大万能建议"},{"id":"wjt_auto_156","source":"王晶婷","curated":false,"group":"第三段第2句·六大建议","function":"选择4","en":"Government subsidies and cost-cutting measures are more reasonable ways to make it possible to {{action}}.","zh":"","source_page":24,"raw_section":"第三段第2句·六大万能建议"},{"id":"wjt_auto_157","source":"王晶婷","curated":false,"group":"第三段第2句·六大建议","function":"选择5","en":"Authorities must establish a fair mediation framework to resolve disputes between {{side1}} and {{side2}}.","zh":"","source_page":24,"raw_section":"第三段第2句·六大万能建议"},{"id":"wjt_auto_159","source":"王晶婷","curated":false,"group":"第三段第2句·六大建议","function":"选择7","en":"As the cradle of talent, universities ought to spread positive cultural values, regulate students' conduct and motivate them to seek knowledge and progress.","zh":"","source_page":25,"raw_section":"第三段第2句·六大万能建议"},{"id":"wjt_auto_160","source":"王晶婷","curated":false,"group":"第三段第2句·六大建议","function":"选择7","en":"As the cradle of talent, universities carry great significance in exerting positive cultural influence on the public and stimulating young people's thirst for knowledge; that is to say, they ought to regulate students' conduct to set fine examples for the whole society.","zh":"","source_page":25,"raw_section":"第三段第2句·六大万能建议"},{"id":"wjt_auto_161","source":"王晶婷","curated":false,"group":"第三段第2句·六大建议","function":"","en":"Only when the government becomes a major investor in family welfare programs does the well-being of the younger and elder generations increase substantially.","zh":"第三段 第2句：六大万能建议（作文书P52-57） 3. 政府、学校（法律/规则/投资）【运用】","source_page":27,"raw_section":"第三段第2句·六大万能建议"},{"id":"wjt_auto_163","source":"王晶婷","curated":false,"group":"第三段第3句·展望","function":"","en":"Relevant organizations must initiate high-profile campaigns aimed at addressing detrimental behaviors and reforming societal value systems. This is an imperative step toward fostering {{goal}}.","zh":"第三段 第2句：六大万能建议（作文书P52-57） 5. 相关社团 相关组织必须发起高调宣传的运动，旨在解决有害行为并改革社会价值体系。这是促进 [具体目标，如“社会公德”] 的必要步骤。","source_page":32,"raw_section":"第三段第3句·下结论＋展望未来"},{"id":"wjt_auto_165","source":"王晶婷","curated":false,"group":"第三段第3句·展望","function":"选择1","en":"It is through constant personal devotion and self-improvement that every individual can {{goal}}.","zh":"","source_page":35,"raw_section":"第三段第3句·下结论＋展望未来"},{"id":"wjt_auto_168","source":"王晶婷","curated":false,"group":"第三段第3句·展望","function":"选择2","en":"Those eager to accomplish their goals ought to summon up courage and overcome internal obstacles, so as to {{goal}}.","zh":"It is undoubtedly true that [ 主题词 ] is the cornerstone of success, so anyone who is","source_page":36,"raw_section":"第三段第3句·下结论＋展望未来"},{"id":"wjt_auto_170","source":"王晶婷","curated":false,"group":"第三段第3句·展望","function":"选择3","en":"Full of obstacles as life may be, the road ahead will become far smoother if we {{action}}.","zh":"","source_page":37,"raw_section":"第三段第3句·下结论＋展望未来"},{"id":"wjt_auto_175","source":"王晶婷","curated":false,"group":"第三段第3句·展望","function":"","en":"Optimism lies at the heart of success and it allows people to overcome inner fears to fulfill their goals.","zh":"第三段 第2句：六大万能建议（作文书P52-57） 6. 个人【运用】","source_page":40,"raw_section":"第三段第3句·下结论＋展望未来"},{"id":"wjt_auto_176","source":"王晶婷","curated":false,"group":"第三段第3句·展望","function":"","en":"The success of addressing the problem of {{topic}} demands joint efforts of the whole society. Many kinds of reforms are needed and perhaps they will not bear fruit immediately. However, let us not have any doubt about the direction in which we are moving.","zh":"如果问题比较复杂，不好解决或者字数限制，那就这样写：","source_page":41,"raw_section":"第三段第3句·下结论＋展望未来"},{"id":"wjt_auto_179","source":"王晶婷","curated":false,"group":"第三段第3句·展望","function":"选择2","en":"If we want to avoid making similar mistakes in the future, everybody should make a change.","zh":"","source_page":43,"raw_section":"第三段第3句·下结论＋展望未来"},{"id":"wjt_auto_181","source":"王晶婷","curated":false,"group":"第三段第3句·展望","function":"选择3","en":"Without a clear understanding of the current situation, we would be between a rock and a hard place.","zh":"","source_page":44,"raw_section":"第三段第3句·下结论＋展望未来"},{"id":"wjt_auto_182","source":"王晶婷","curated":false,"group":"第三段第3句·展望","function":"选择3","en":"Without a clear appreciation of the current state of affairs, we would steer between Scylla and Charybdis.","zh":"","source_page":44,"raw_section":"第三段第3句·下结论＋展望未来"},{"id":"wjt_auto_183","source":"王晶婷","curated":false,"group":"第三段第3句·展望","function":"选择4","en":"While we cannot control life's duration, we define its depth through our choices.","zh":"","source_page":45,"raw_section":"第三段第3句·下结论＋展望未来"},{"id":"wjt_auto_185","source":"王晶婷","curated":false,"group":"第三段第3句·展望","function":"选择6","en":"Let us get prepared and embrace the harmonious and disciplined society built by our joint efforts.","zh":"","source_page":46,"raw_section":"第三段第3句·下结论＋展望未来"},{"id":"wjt_auto_189","source":"王晶婷","curated":false,"group":"第三段第3句·展望","function":"","en":"Altogether, mobile phones, if handled carelessly or without restraints—despite its widespread prevalence—might prove to be a double-edged sword. We must strive to cultivate an environment that encourages people to put down their cellphones and engage in positive communication. Let’s get prepared and embrace the harmonious society built by our joint efforts.","zh":"第三段 写15年手机时代的聚会","source_page":48,"raw_section":"第三段第3句·下结论＋展望未来"},{"id":"wjt_r_tech","source":"王晶婷","curated":true,"group":"第二段·十大万能原因","function":"十大万能原因","en":"Society and technology have made remarkable progress in recent years, which has fundamentally changed the way people {{action}}.","zh":""},{"id":"wjt_r_global","source":"王晶婷","curated":true,"group":"第二段·十大万能原因","function":"十大万能原因","en":"Due to rapid economic globalization and urbanization, people today encounter a multitude of new choices, and this partly explains why {{phenomenon}}.","zh":""},{"id":"wjt_r_money","source":"王晶婷","curated":true,"group":"第二段·十大万能原因","function":"十大万能原因","en":"The pursuit of economic benefits is another force at work: many people, if not most, are driven by profit, which inevitably leads to {{phenomenon}}.","zh":""},{"id":"wjt_r_mood","source":"王晶婷","curated":true,"group":"第二段·十大万能原因","function":"十大万能原因","en":"The undesirable general mood of society is to blame as well, such as the gradual loss of mutual trust and the sense of social responsibility.","zh":""},{"id":"wjt_r_shift","source":"王晶婷","curated":true,"group":"第二段·十大万能原因","function":"十大万能原因","en":"A profound shift in social values serves as another factor: people begin to attach greater importance to {{topic}} than ever before.","zh":""},{"id":"wjt_r_culture","source":"王晶婷","curated":true,"group":"第二段·十大万能原因","function":"十大万能原因","en":"Thanks to the inclusiveness and diversity of culture, there is an array of options facing every person, and some of them choose {{action}}.","zh":""},{"id":"wjt_r_gov","source":"王晶婷","curated":true,"group":"第二段·十大万能原因","function":"十大万能原因","en":"The role of the government and schools should never be underestimated, for their policies and education directly shape how people {{action}}.","zh":""},{"id":"wjt_r_media","source":"王晶婷","curated":true,"group":"第二段·十大万能原因","function":"十大万能原因","en":"The mass media, especially the Internet and social networking, spread such messages at an unprecedented speed, which strongly encourages people to {{action}}.","zh":""},{"id":"wjt_r_person","source":"王晶婷","curated":true,"group":"第二段·十大万能原因","function":"十大万能原因","en":"At the individual level, it is people's own awareness and self-discipline that determine whether they will {{action}}.","zh":""},{"id":"wjt_r_crisis","source":"王晶婷","curated":true,"group":"第二段·十大万能原因","function":"十大万能原因","en":"Last but not least, the strain of modern life has opened a Pandora's box of problems, as people become increasingly result-oriented and impatient.","zh":""},{"id":"ds_p1_open_1","source":"DeepSeek","curated":true,"group":"第一段·总体描述","function":"第一段·总体描述","en":"What immediately catches the eye in the drawing is {{scene}}.","zh":"图画里最先映入眼帘的是……"},{"id":"ds_p1_open_2","source":"DeepSeek","curated":true,"group":"第一段·总体描述","function":"第一段·总体描述","en":"The drawing before us presents a scene that most of us are quite familiar with: {{scene}}.","zh":"眼前的图画呈现了一个我们都很熟悉的场景。"},{"id":"ds_p1_open_3","source":"DeepSeek","curated":true,"group":"第一段·总体描述","function":"第一段·总体描述","en":"Simple as the picture appears, it captures a scene worth pondering: {{scene}}.","zh":"画面看似简单，却定格了一个值得深思的场景。"},{"id":"ds_p1_open_4","source":"DeepSeek","curated":true,"group":"第一段·总体描述","function":"第一段·总体描述","en":"Laid out in the picture is {{scene}}, a scene that is by no means rare in our daily life.","zh":"图中呈现的是……，这在日常生活中并不罕见。"},{"id":"ds_p1_chart_1","source":"DeepSeek","curated":true,"group":"第一段·图表总体","function":"第一段·图表总体","en":"The chart presents {{content}}, and the figures alone are thought-provoking.","zh":"图表呈现了……，仅这些数据就发人深省。"},{"id":"ds_p1_chart_2","source":"DeepSeek","curated":true,"group":"第一段·图表总体","function":"第一段·图表总体","en":"As the figures in the chart indicate, {{content}}.","zh":"正如数据所示……"},{"id":"ds_p1_detail_1","source":"DeepSeek","curated":true,"group":"第一段·细节描述","function":"第一段·细节描述","en":"A closer look reveals that {{detail}}.","zh":"再仔细看会发现……"},{"id":"ds_p1_detail_2","source":"DeepSeek","curated":true,"group":"第一段·细节描述","function":"第一段·细节描述","en":"What deserves a second look is that {{detail}}, which sets people thinking.","zh":"更值得注意的是……，令人深思。"},{"id":"ds_p1_detail_3","source":"DeepSeek","curated":true,"group":"第一段·细节描述","function":"第一段·细节描述","en":"More specifically, {{detail}} — and this is exactly where the message lies.","zh":"更具体地说……，而这恰是寓意所在。"},{"id":"ds_p1_caption_1","source":"DeepSeek","curated":true,"group":"第一段·图文字","function":"第一段·图文字","en":"The line at the bottom of the picture, \"{{caption}}\", gives us a clue to the designer’s intention.","zh":"图下方的文字……为我们理解作者意图提供了线索。"},{"id":"ds_p1_caption_2","source":"DeepSeek","curated":true,"group":"第一段·图文字","function":"第一段·图文字","en":"The caption \"{{caption}}\" at the bottom makes the message even clearer.","zh":"图下方\"……\"这行字让寓意更加明确。"},{"id":"ds_p2_thesis_1","source":"DeepSeek","curated":true,"group":"第二段·主旨句","function":"第二段·主旨句","en":"Behind this scene lies a plain yet powerful truth: {{thesis}}.","zh":"这一场景背后是一个朴素而有力的道理：……"},{"id":"ds_p2_thesis_2","source":"DeepSeek","curated":true,"group":"第二段·主旨句","function":"第二段·主旨句","en":"Read in this light, the picture is meant to remind us that {{thesis}}.","zh":"由此看来，这幅图是想提醒我们……"},{"id":"ds_p2_thesis_3","source":"DeepSeek","curated":true,"group":"第二段·主旨句","function":"第二段·主旨句","en":"What the drawer intends to convey is nothing other than this: {{thesis}}.","zh":"作者想传达的正是……"},{"id":"ds_p2_thesis_4","source":"DeepSeek","curated":true,"group":"第二段·主旨句","function":"第二段·主旨句","en":"However simple the picture is, it points to a fact we can hardly ignore: {{thesis}}.","zh":"画面虽简单，却指向一个我们难以忽视的事实：……"},{"id":"ds_p2_lead_1","source":"DeepSeek","curated":true,"group":"第二段·原因总起","function":"第二段·原因总起","en":"Two factors, in my view, help to explain this.","zh":"在我看来，有两个因素可以解释这一点。"},{"id":"ds_p2_lead_2","source":"DeepSeek","curated":true,"group":"第二段·原因总起","function":"第二段·原因总起","en":"Several reasons may account for such a situation.","zh":"有若干原因可以解释这一现象。"},{"id":"ds_p2_lead_3","source":"DeepSeek","curated":true,"group":"第二段·原因总起","function":"第二段·原因总起","en":"The causes, as far as I can see, are twofold.","zh":"在我看来原因有两方面。"},{"id":"ds_p2_reason_1","source":"DeepSeek","curated":true,"group":"第二段·原因一","function":"第二段·原因一","en":"First and foremost, {{reason1}}.","zh":"首先……"},{"id":"ds_p2_reason_2","source":"DeepSeek","curated":true,"group":"第二段·原因二","function":"第二段·原因二","en":"What deserves equal attention is that {{reason2}}.","zh":"同样值得关注的是……"},{"id":"ds_p2_reason_3","source":"DeepSeek","curated":true,"group":"第二段·原因二","function":"第二段·原因二","en":"Another factor that cannot be ignored is that {{reason2}}, which makes the situation even more noticeable.","zh":"另一个不能忽视的因素是……"},{"id":"ds_p2_example_1","source":"DeepSeek","curated":true,"group":"第二段·例证","function":"第二段·例证","en":"A case in point is {{person}}, whose {{cause}} enabled him to {{result}}.","zh":"一个恰当的例子是……"},{"id":"ds_p2_example_2","source":"DeepSeek","curated":true,"group":"第二段·例证","function":"第二段·例证","en":"Take {{person}} as an example: it was {{cause}} that allowed him to {{result}} step by step.","zh":"以……为例：正是……让他一步步……"},{"id":"ds_p3_conclusion_1","source":"DeepSeek","curated":true,"group":"第三段·结论","function":"第三段·结论","en":"In light of the analysis above, it is safe to conclude that {{conclusion}}.","zh":"综上可以得出结论：……"},{"id":"ds_p3_conclusion_2","source":"DeepSeek","curated":true,"group":"第三段·结论","function":"第三段·结论","en":"To sum up, what the picture reflects is far more than a passing scene; it is {{conclusion}}.","zh":"总之，这幅图反映的不只是一个场景，而是……"},{"id":"ds_p3_suggest_1","source":"DeepSeek","curated":true,"group":"第三段·建议","function":"第三段·建议","en":"To make a real difference, joint efforts are required: {{subject}} should {{action}}.","zh":"要真正改变现状，需要共同努力：……应当……"},{"id":"ds_p3_suggest_2","source":"DeepSeek","curated":true,"group":"第三段·建议","function":"第三段·建议","en":"It is high time that {{subject}} took concrete steps to {{action}}, rather than merely talking about it.","zh":"是时候让……采取具体行动……，而不是只停留在口头上。"},{"id":"ds_p3_suggest_3","source":"DeepSeek","curated":true,"group":"第三段·建议","function":"第三段·建议","en":"As individuals, we can begin with small things and {{action}}; as a society, we should create an atmosphere in which {{topic}} is valued.","zh":"作为个人，我们可以从小事做起……；作为社会，应当营造重视……的氛围。"},{"id":"ds_p3_outlook_1","source":"DeepSeek","curated":true,"group":"第三段·展望","function":"第三段·展望","en":"Only in this way can we {{goal}}.","zh":"只有这样，我们才能……"},{"id":"ds_p3_outlook_2","source":"DeepSeek","curated":true,"group":"第三段·展望","function":"第三段·展望","en":"With such sustained efforts, we have every reason to believe that we will {{goal}}.","zh":"有了这样的持续努力，我们有理由相信会……"},{"id":"ds_p3_outlook_3","source":"DeepSeek","curated":true,"group":"第三段·展望","function":"第三段·展望","en":"However long the road ahead may be, it is well worth taking, for it leads us to {{goal}}.","zh":"无论前路多长，都值得走，因为它通向……"}],"slotDefs":{"scene":{"label":"图画总体场景","examples":["a thought-provoking scene on campus","a family gathering at the dinner table","a young man climbing a steep mountain"]},"detail":{"label":"图画细节","examples":["a father is reading beside his son, who is also holding a book","two students are staring at their phones instead of talking","a graduate stands at a crossroads with two signs"]},"focus":{"label":"画面对比/关键处","examples":["the father practices what he preaches","the students sit together but talk to nobody","the two choices lead to totally different futures"]},"sth":{"label":"画面主体","examples":["two contrasting scenes","a heart-warming family scene","several students on the playground"]},"place":{"label":"画面位置","examples":["the desk","the classroom","the mountain","the dinner table"]},"person":{"label":"画面人物","examples":["a father and his son","a young graduate","a group of students"]},"left":{"label":"左图内容","examples":["a man complains about the mess in his room","a student is buried in books but never practises"]},"right":{"label":"右图内容","examples":["the same man tidies up and smiles","another student practises what he learns"]},"caption":{"label":"图中文字（caption）","examples":["\"Action speaks louder than words.\"","\"The Unity of Knowing and Acting\"","\"Mutual trust makes a warm society.\""]},"survey":{"label":"图表调查主题","examples":["a survey of college students’ reading habits","the changes in the number of museum visitors"]},"content":{"label":"图表内容","examples":["the changes in the number of online shoppers from 2019 to 2023","the proportion of students who exercise regularly"]},"data":{"label":"图表数据","examples":["the figure rose from 20% to 65%","the number doubled within five years"]},"data1":{"label":"数据一","examples":["the number climbed steadily from 2019 to 2023","over 60% of the respondents chose online courses"]},"data2":{"label":"数据二","examples":["it peaked at 8,000 in 2022","the proportion of rural users grew by 15%"]},"data3":{"label":"数据三/关键点","examples":["the growth has slowed down since 2023","the gap between the two groups is narrowing"]},"phenomenon":{"label":"现象名称","examples":["the increasing dependence on mobile phones","the revival of traditional culture","the growing popularity of museums"]},"topic":{"label":"话题关键词","examples":["mutual trust","perseverance","cultural confidence","teamwork","honesty"]},"thesis":{"label":"主旨句（本题寓意）","examples":["practising what one preaches is the most effective approach to family education","perseverance is the key to personal growth"]},"reason1":{"label":"原因一","examples":["society and technology have made remarkable progress","people are driven by the pursuit of profit"]},"reason2":{"label":"原因二","examples":["the general mood of society has changed","education has raised people’s awareness"]},"condition":{"label":"条件","examples":["people lack a clear sense of responsibility","we ignore the value of traditions"]},"consequence":{"label":"后果","examples":["the whole society will pay a heavy price","mutual trust will gradually disappear"]},"cause":{"label":"品质/动因","examples":["perseverance and self-discipline","the courage to step out of the comfort zone"]},"result":{"label":"取得的成就","examples":["win three Olympic gold medals","become a leading scientist"]},"conclusion":{"label":"结论","examples":["the phenomenon deserves our constant attention","mutual trust is indispensable to a harmonious society"]},"subject":{"label":"建议主体","examples":["the university","the government","students themselves","the authorities"]},"action":{"label":"具体做法","examples":["organize more cultural activities on campus","set up a long-term volunteer programme","read classic books in spare time"]},"goal":{"label":"预期目标","examples":["build a harmonious campus","embrace a brighter future","make our society warmer"]},"quote":{"label":"名言","examples":["Genius is one percent inspiration and ninety-nine percent perspiration.","Where there is a will, there is a way."]},"speaker":{"label":"名言出处（人物）","examples":["Thomas Edison","an old proverb"]},"action1":{"label":"做法一","examples":["taking the first step bravely","reading widely"]},"action2":{"label":"做法二","examples":["keeping a positive attitude","practising every day"]},"item":{"label":"统计对象","examples":["museum visitors","online shoppers","college volunteers"]},"from":{"label":"起始值","examples":["1,000","20%"]},"to":{"label":"终止值","examples":["8,000","65%"]},"period":{"label":"时间跨度","examples":["the past five years","the period from 2019 to 2023"]},"side1":{"label":"一方","examples":["some students prefer to work after graduation","urban residents"]},"side2":{"label":"另一方","examples":["others choose to further their education","rural residents"]}},"rubric":{"meta":{"total":20,"note":"英一大作文 20 分；分档描述"},"bands":{"17-20":{"内容":"紧扣图画寓意，论点充分","结构":"三段清晰、衔接自然","语言":"句式多样、词汇丰富、几乎无错"},"13-16":{"内容":"切题，论点较充分","结构":"结构完整","语言":"有少量错误但不影响理解"},"9-12":{"内容":"基本切题，论述一般","结构":"结构基本完整","语言":"错误较多"},"5-8":{"内容":"部分偏题","结构":"结构松散","语言":"错误多、影响理解"},"1-4":{"内容":"偏题或无关","结构":"无结构","语言":"大量错误"}},"dimensions":[{"id":"content","name":"内容（图画/图表描述+寓意）","weight":0.35},{"id":"structure","name":"结构（三段、论证层次）","weight":0.25},{"id":"language","name":"语言（句式、词汇、语法）","weight":0.3},{"id":"format","name":"格式与字数","weight":0.1}],"common_errors":["第一段漏写图文字/caption","第二段没有主旨句","原因之间无连接词","第三段缺建议/展望","数字或单复数错误","套模板痕迹过重与题目不符"]},"format":{"meta":{"usage":"大作文格式与卷面要求"},"word_count":{"official":"160-200 words","min":160,"max":220,"recommend":"200 词左右"},"score":"20 分（Section III Part B）","layout":{"alignment":"齐头式（左对齐顶格）或缩进式（视老师体系）","paragraphs":"3 段：第一段描述（3-4 句）／第二段论证（4-6 句）／第三段结论（2-3 句）","no_title":"大作文不写标题、不写落款"},"时态":"描述图画用一般现在时/现在进行时；出现过去时间点（图表）用一般过去时。","大忌":["只描述不议论（第二段必须点题）","第二段只写一条原因","第三段没有建议或结论","数字表述错误（number/amount 单复数）","字数不足 160"]},"zhuzhi":{"2001":{"category":"哲理品质为例","zh":"...爱意味着对周围人的奉献、同情和怜悯，它能彰显人性在日常生活中的 光辉，即使是在最黑暗的时刻。","en":"love signifies dedication, sympathy and compassion for those around us, which can demonstrate the brilliance of humanity in daily life, even in the darkest times."},"2002":{"category":"大众现象为例","zh":"...无论是在理论上还是在实践中，文化保护和文化交流在全球化中都同等 重要。","en":"cultural preservation and intercultural exchange are equivalently pivotal in globalization, both in principle and in practice."},"2003":{"category":"哲理品质为例","zh":"...过度保护有时不但不会避免伤害，还可能适得其反。","en":"over-protection sometimes not only fails to prevent harm, but may also turn out to be the opposite."},"2004":{"category":"哲理品质为例","zh":"...“精益求精”在拉丁语中意为“永远向上”或“更高”，代表了一种前 进的势头，将进步和成长置于停滞和自满之上。","en":"“excelsior”, which means “ever upward” or “higher” in Latin, represents a forward momentum that prioritizes progress and growth over stagnation and complacency."},"2005":{"category":"大众现象为例","zh":"...孝道可以说是中国核心的道德原则之一，它意味着对父母或祖先的强烈 忠诚和尊重。","en":"filial piety is arguably one of China’s core moral tenets, which entails a strong loyalty and deference to one’s parents or ancestors."},"2006":{"category":"大众现象为例","zh":"...名人崇拜对年轻一代产生了不可忽视的重大影响。","en":"celebrity worship exerts an inescapably significant impact on the young generation."},"2007":{"category":"哲理品质为例","zh":"...充足的自信会给我们的优秀表现带来力量和影响，反之亦然。","en":"adequate confidence will exert an empowering impact on our excellent performance and vice versa."},"2008":{"category":"哲理品质为例","zh":"...人类是一个依赖合作生存和发展的社会物种，这形成了我们生活社会的 基石。","en":"human beings are a social species that relies on cooperation to survive and thrive, which forms the cornerstone of both our lives and society."},"2009":{"category":"大众现象为例","zh":"...网络的兴起“福祸相依”。","en":"the rise of the Internet is both a “blessing” and a “curse”."},"2010":{"category":"大众现象为例","zh":"...文化融合对社会动态产生了不可忽视的重大影响。随着跨文化接触的增 加，理解和合作的新机会也随之而来。","en":"cultural blending exerts an inescapably significant impact on social dynamics. With increased intercultural contact come new opportunities for understanding and collaboration."},"2011":{"category":"大众现象为例","zh":"...一个人的健康生活和一个社会的可持续发展几乎是不可能实现的，如果 没有宜居的生活环境和稳定的生态基础。","en":"neither one's healthy life nor a society’s sustainable development would be attainable without a livable environment and a stable ecological foundation."},"2012":{"category":"哲理品质为例","zh":"...当我们面对生活的各种情况时，真正重要的是我们的心态而不是其他。","en":"it is precisely our mindsets/attitudes, rather than anything else, that truly matter when we confront various situations in our life."},"2013":{"category":"大众现象为例","zh":"...现代大学生在定位未来的人生道路时有两个主要的方向：继续教育或者 进入职场。","en":"modern college students aim at two major orientations when navigating their future life path：furthering their education or entering the workplace."},"2014":{"category":"大众现象为例","zh":"...一个人的幸福和成长几乎是不可能实现的，如果没有家人的支持和陪伴。","en":"no one’s happiness or personal growth would be attainable without the company and support from family."},"2015":{"category":"大众现象为例","zh":"...人类是一个依赖沟通交流生存和发展的社会物种，这形成了我们生活社 会的基石。","en":"human beings are a social species that relies on communication to survive and thrive, which forms the cornerstone of both our lives and society."},"2016":{"category":"大众现象为例","zh":"...以身作则（言行一致）是家庭教育最有效的方法。","en":"practicing what one preaches is the most efficacious approach to family education."},"2017":{"category":"哲理品质为例","zh":"...“知行合一”的思想在个人成长和自我实现中起着重要作用。","en":"the philosophy of “the unity of knowing and acting” holds a key position in personal growth and self-fulfillment."},"2018":{"category":"大众现象为例","zh":"...虽然关注分数等切实成绩会带来短期收获，但同时缺失自我挑战和创新 可能会引发长期后果。","en":"while keeping attentive to tangible achievements, such as grades, can yield short-term gains, the concomitant loss of self-challenge and innovation may incur long-term consequences."},"2019":{"category":"哲理品质为例","zh":"...一个坚定的信念是我们人生道路上的“加油站”。","en":"a steadfast conviction is the “fuel station” on our life journey."},"2020":{"category":"哲理品质为例","zh":"...执行力和拖延症就像一对性格迥然不同的双胞胎，会带来不同的结果。","en":"execution and procrastination are analogous to twins with starkly different personalities, bringing divergent outcomes."},"2021":{"category":"哲理品质为例","zh":"...当我们在追求兴趣与热爱时，我们应当坚定地遵从内心的声音并且不被 他人意见和外界嘈杂所动摇。","en":"we are expected to resolutely follow our inner voice and not to be swayed by others’ opinions and the external cacophony when we are pursuing interests and passions."},"2022":{"category":"大众现象为例","zh":"...无论是在理论上还是在实践中，广泛学习和集中学习在学业中都同等重 要。","en":"extensive learning and intensive learning are equivalently pivotal in study, both in principle and in practice."},"2023":{"category":"大众现象为例","zh":"...国家愈发重视传统文化习俗的精神价值并且人们的文化自信也在稳步提 升。","en":"greater emphasis has been put on the spiritual value of traditional culture and customs and people’s cultural confidence is on a steady rise."},"2024":{"category":"大众现象为例","zh":"...国家愈发重视全民健身计划的基础设施并且人们的健康意识也在稳步提 升。","en":"greater emphasis has been put on the infrastructure of the National Fitness Program and people’s health awareness is on a steady rise."},"2025":{"category":"大众现象为例","zh":"...在经济繁荣的推动下，家庭可支配收入稳步增长，这重塑了居民的消费 模式，并且重新定义了“生活质量”指标。","en":"a steady growth in household disposable income, fueled by economic boom and prosperity, has reshaped residents’ consumption patterns, redefining ‘quality of life’ metrics."},"2026":{"category":"大众现象为例","zh":"...新兴技术的蓬勃发展已经渗透到日常生活的方方面面，而社会保障尤为 突出，成为主要受益者。","en":"the proliferation of emerging technologies has permeated every facet of daily life, with social security standing out as a primary beneficiary."}},"defaultKey":"","build":"2026-10-28T15:49:15Z"};
+
+/* ================= 工具 ================= */
+const $ = id => document.getElementById(id);
+function esc(s){ return String(s==null?'':s).replace(/[&<>"]/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])) }
+/* {{a/b/c}} → {{a}}：槽位名里带斜杠时只保留第一个（并作为可选值提示） */
+function normBraces(text){ return String(text||'').replace(/\{\{([^}]+)\}\}/g, (m,inner)=>{
+  const first = inner.split('/')[0].trim();
+  return '{{'+first+'}}';
+}) }
+function braceAlts(text){ const out={}; const re=/\{\{([^}]+)\}\}/g; let m;
+  while((m=re.exec(String(text||'')))){ const p=m[1].split('/').map(x=>x.trim()).filter(Boolean);
+    if(p.length>1) out[p[0]]=p.slice(1); }
+  return out }
+function parseSlots(text){ const out=[]; const re=/\{\{(\w+)\}\}/g; let m; while((m=re.exec(normBraces(text)))){ if(!out.includes(m[1])) out.push(m[1]); } return out }
+/* 词内斜杠（ongoing/upcoming）→ 并列备选 */
+function wordAlts(text){ const out=[], re=/(?<![\/\w])([A-Za-z][A-Za-z'\-]*)\/([A-Za-z][A-Za-z'\-]*)(?![\/\w])/g; let m;
+  while((m=re.exec(String(text||'')))) out.push({a:m[1],b:m[2]}); return out }
+const sentenceById = id => DATA.sentences.find(s=>s.id===id);
+const planByYear = y => DATA.plans.find(p=>p.year===y);
+
+const KIND_CN = { '现象类':'大众现象类', '哲理类':'哲理品质类', '哲理品质类':'哲理品质类' };
+const SYS_LIST = Object.keys(DATA.systems);            // ['鲁述钊','王晶婷']
+const SYS_COLOR = { 鲁述钊:'#0f766e', 王晶婷:'#7c3aed' };
+
+let cur = null;   // { year, system, plan, template, sections[], words, essay, result }
+
+/* ================= 首页 ================= */
+function showHome(){
+  $('viewHome').style.display='block';
+  $('viewWrite').style.display='none';
+  $('viewResult').style.display='none';
+  $('hdBar').innerHTML='';
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+let curFilter='all';
+function renderHome(){
+  const types = [['all','全部'],['现象类','大众现象类'],['哲理','哲理品质类'],['picture','图画题'],['chart','图表题']];
+  $('filters').innerHTML = types.map(([k,label])=>
+    `<div class="chip${curFilter===k?' on':''}" onclick="setFilter('${k}')">${label}</div>`).join('');
+  const list = DATA.plans.filter(p => {
+    if(curFilter==='all') return true;
+    if(curFilter==='picture') return p.genre==='picture';
+    if(curFilter==='chart') return p.genre==='chart';
+    return String(p.kind||'').indexOf(curFilter)>=0;
+  });
+  $('yearGrid').innerHTML = list.map(p=>{
+    return `<div class="year-btn" onclick="openYear(${p.year})">
+      <b>${p.year} 年</b>
+      <span class="sys z">${p.kind||'-'}</span>
+      <span class="sys w">${p.topic||p.caption.slice(0,12)||'-'}</span>
+    </div>`;
+  }).join('');
+}
+function setFilter(k){ curFilter=k; renderHome(); }
+
+/* ================= 打开某年 ================= */
+function openYear(year, system){
+  const plan = planByYear(year);
+  cur = { year, system: system || (cur && cur.system) || SYS_LIST[0], plan, sections: [] };
+  $('viewHome').style.display='none';
+  $('viewResult').style.display='none';
+  $('viewWrite').style.display='block';
+  $('hdBar').innerHTML = '<button class="back-btn" onclick="showHome()">← 返回选题</button>';
+  buildSections();
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+function switchSystem(sys){
+  cur.system = sys;
+  buildSections();
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+function buildSections(){
+  cur.sections = buildDzwSections();
+  renderHeader(); renderForm(); updatePreview();
+}
+/* 大作文三段骨架：全部来自 DATA.systems[体系].sections，句首句尾可删可换 */
+function buildDzwSections(){
+  const sys = DATA.systems[cur.system] || SYS_LIST[0];
+  return (sys.sections||[]).map(sec=>{
+    const firstId = (sec.ids||[])[0] || null;
+    const s = {
+      key: sec.key, label: sec.label, para: sec.p || 1, kind:'sentence',
+      ids: (sec.ids||[]).slice(), required: !!sec.required, requiredIf: null,
+      hint: sec.hint || '', sents: [],
+    };
+    if(firstId){
+      const sen = sentenceById(firstId), slots = {};
+      if(sen) parseSlots(sen.en).forEach(sl=>{ slots[sl] = prefillSlot(sl) });
+      s.sents = [{ id:firstId, slots }];
+    }
+    return s;
+  });
+}
+/* 槽位预填：主旨句/图画内容等能直接从题目数据取的，就自动填好 */
+function prefillSlot(sl){
+  const p = cur.plan || {};
+  if(sl==='thesis') return p.thesis_en || '';
+  if(sl==='caption') return p.caption ? '"'+p.caption.replace(/（补充）$/,'')+'"' : '';
+  if(sl==='topic') return p.topic || '';
+  return '';
+}
+
+/* ---------- 本题主旨句：默认折叠，点按钮才看（先自己写） ---------- */
+let SHOW_THESIS = false;
+function toggleThesis(){
+  SHOW_THESIS = !SHOW_THESIS;
+  const el = $('thesisBody'), btn = $('thesisBtn');
+  if(el) el.style.display = SHOW_THESIS ? 'block' : 'none';
+  if(btn) btn.textContent = SHOW_THESIS ? '🙈 收起主旨句' : '💡 看本题标准主旨句';
+}
+
+/* ================= 页头 ================= */
+function renderHeader(){
+  const z = cur.plan['周思成']||{}, w = cur.plan['王晶婷']||{};
+  const wjt = cur.system==='王晶婷';
+  $('sysSwitch').innerHTML = SYS_LIST.map(s=>{
+    const on = s===cur.system;
+    return `<div class="sysbtn${on?' on':''}${s==='王晶婷'?' wjt':''}" onclick="switchSystem('${s}')">
+      <b>${s} 体系</b><span>${(DATA.systems[s].desc||'').slice(0,34)}…</span></div>`;
+  }).join('');
+  const p = cur.plan;
+  $('taskTitle').textContent = `${cur.year} 年 · 英语（一）大作文（${cur.system} 体系）`;
+  $('taskNote').textContent = `${p.kind||''} · 话题：${p.topic||'-'} · ${DATA.systems[cur.system].style}`;
+  $('taskBadges').innerHTML = `<span class="badge g1">${p.kind||'-'}</span>
+    <span class="badge g2">${p.genre==='chart'?'图表题 Chart':'图画题 Picture'}</span>
+    <span class="badge g3">${cur.system} 体系</span>
+    <span class="badge g1">目标 160–200 词</span>`;
+  $('promptText').textContent = p.prompt_en || '(本题原题缺失)';
+  $('promptZh').textContent = p.prompt_zh || '(暂无中文对照)';
+  $('promptSrc').textContent = `${cur.year} 年英语（一）大作文 Part B 真题原文 ＋ 中文对照`;
+  $('capText').textContent = p.caption || '(本题图画/图表内容未收录)';
+  /* 本题主旨句：默认折叠，点按钮才看（先自己写） */
+  const tb = $('thesisBody');
+  if(tb){
+    tb.innerHTML = (p.thesis_zh || p.thesis_en)
+      ? `<div class="th-zh"><b>中文：</b>${esc(p.thesis_zh||'-')}</div><div class="th-en"><b>英文：</b>${esc(p.thesis_en||'-')}</div>
+         <div class="hint">可直接点第二段主旨句槽位下方的「💡 用本题主旨句」一键填入</div>`
+      : '<div class="hint">本题主旨句暂缺</div>';
+    tb.style.display = SHOW_THESIS ? 'block' : 'none';
+    const btn = $('thesisBtn');
+    if(btn) btn.textContent = SHOW_THESIS ? '🙈 收起主旨句' : '💡 看本题标准主旨句';
+  }
+  const pts = [
+    '第一段：简要描述图画/图表（3–4 句，有 caption 就写 caption）',
+    '第二段：点明寓意（主旨句）＋ 2–3 条原因，层次用 For one thing / For another 或 Firstly / Moreover',
+    '第三段：结论 ＋ 建议/展望（Only in this way… 或 To sum up…）',
+    '全篇不写标题、不写落款，160–200 词',
+  ];
+  $('requiredPoints').innerHTML = pts.map(x=>`<li>${esc(x)}</li>`).join('');
+  $('formTip').innerHTML = `${cur.system} 体系：<b>三段</b>结构 —— ${esc((DATA.systems[cur.system].desc||''))}。每段可选句型或"＋ 再加一句"，任意段/句都能删。`;
+  const pv = $('preview');
+  pv.className = 'preview serif';
+}
+
+/* ================= 表单 ================= */
+const PARA_LABEL = { 1:'第一段', 2:'第二段', 3:'第三段' };
+function isBodySec(s){ return !!s && !!s.para }
+
+/* 某段的候选句型：本段指定 → 同 group 其他句（同体系）→ 同体系其他段的同位句型 */
+function groupOptions(s){
+  const ids = (s.ids||[]).slice();
+  const groups = new Set(ids.map(id=>{ const x=sentenceById(id); return x?x.group:null }).filter(Boolean));
+  const src = cur.system;
+  const extra = DATA.sentences.filter(x=>groups.has(x.group) && !ids.includes(x.id) && x.source===src);
+  /* 可通用池：同一段落（P1/P2/P3）其他小节的候选句 */
+  const used = new Set(ids.concat(extra.map(x=>x.id)));
+  const bank = [];
+  const sys = DATA.systems[cur.system] || {};
+  (sys.sections||[]).filter(x=>x.p===s.para && x.key!==s.key).forEach(x=>{
+    (x.ids||[]).forEach(id=>{ const sen=sentenceById(id); if(sen && !used.has(id)){ used.add(id); bank.push(sen) } });
+  });
+  return { ids, extra, wider:bank };
+}
+function optLabel(text){
+  const t=String(text||'').replace(/\{\{(\w+)\}\}/g,'___').replace(/\s+/g,' ').trim();
+  return t.length>78 ? t.slice(0,78)+'…' : t;
+}
+function renderForm(){
+  let lastPara = 0;
+  $('sectionForm').innerHTML = cur.sections.map((s,si)=>{
+    if(s.hidden) return '';
+    const empty = isEmptySec(s);
+    const filled = !empty && isFilled(s);
+    const cls = 'sec' + (filled?' filled':'') + (!filled && s.required?' missing':'') + (empty?' emptied':'');
+    let paraHead = '';
+    if(s.para && s.para !== lastPara){
+      lastPara = s.para;
+      paraHead = `<div class="para-head"><span class="para-no">${PARA_LABEL[s.para]}</span>
+        <span class="para-tip">${s.para===1?'简要描述图画/图表（3–4 句）':s.para===2?'点明寓意 ＋ 2–3 条原因':'结论 ＋ 建议/展望'}</span></div>`;
+    }
+    let inner='';
+    if(s.kind==='text'){
+      if(empty){
+        inner = `<div class="empty-note">本段已删除（成文里不会出现）</div>`;
+      } else {
+        inner = `<textarea oninput="setText(${si},this.value)" placeholder="固定文本">${esc(s.text||'')}</textarea>`;
+      }
+      inner += `<div class="chip-row" style="margin-top:6px">
+        ${empty
+          ? `<button class="add-btn" onclick="restoreSec(${si})">↩ 恢复默认</button>`
+          : `<button class="mini-btn" onclick="setEmpty(${si},true)">🗑 删除本段</button>`}
+      </div>`;
+    } else {
+      if(s.hint) inner += `<div class="hint" style="margin:-2px 0 8px">${esc(s.hint)}</div>`;
+      if(empty){
+        inner += `<div class="empty-note">本小节已删除（成文里不会出现）</div>`;
+        inner += `<div class="chip-row" style="margin-top:6px">
+          <button class="add-btn" onclick="restoreSec(${si})">↩ 恢复默认</button>
+          <button class="add-btn" onclick="addSent(${si})">＋ 选一句写</button>
+        </div>`;
+      } else {
+        inner += s.sents.map((st,ei)=>sentBlock(si,ei,st)).join('');
+        const poolN = (function(){ const go=groupOptions(s); return go.ids.length+go.extra.length+go.wider.length })();
+        inner += `<div class="hint" style="margin-top:2px">本段共 ${poolN} 个候选句型 ＋ 🤖 AI 生成 ＋ ✍️ 自由输入（下拉框可选，槽位可点推荐词）</div>`;
+        inner += `<div class="chip-row" style="margin-top:6px">
+          <button class="add-btn" onclick="addSent(${si})">＋ 再加一句</button>
+          <button class="add-btn" style="background:#faf7ff;border-color:#c7b8f0;color:#5b21b6" onclick="aiSuggest(${si})"${s.aiBusy?' disabled':''}>${s.aiBusy?'⏳ AI 正在想…':'🤖 AI 帮我想 3 句'}</button>
+          <button class="mini-btn" onclick="setEmpty(${si},true)">🗑 删除本段</button>
+        </div>`;
+      }
+      if(s.lastAiError) inner += `<div class="check no" style="margin-top:6px">AI 生成失败：${esc(s.lastAiError)}（可点「🔑 AI 设置」检查 Key 后重试）</div>`;
+      if(s.aiSents && s.aiSents.length) inner += `<div class="ai-sent"><span class="tag-ai">AI 备选</span>${s.aiSents.map((x,i)=>`<div class="en" style="margin-top:3px">${i+1}. ${esc(x)}</div>`).join('')}<div class="hint" style="margin-top:4px">已加入上方下拉框的「🤖 AI 为我生成的句子」，选中即用。</div></div>`;
+    }
+    return `${paraHead}<div class="${cls}"><div class="sec-head">
+      <div class="sec-label">${esc(s.label)}${s.required?'<span class="req">*必写</span>':'<span class="opt">（可选）</span>'}${empty?'<span class="gone">已删</span>':''}</div>
+      </div>${inner}</div>`;
+  }).join('');
+}
+/* ---------- 段的"删除 / 恢复" ----------
+ * 任何段都能整段删掉（称呼、落款尤其需要：不同题目署名人不同、有的信不需要称呼）
+ * 删掉后成文里就不会出现这一段，打分时也会按"本段不计入"处理 */
+function isEmptySec(s){ return !!s._empty }
+function setEmpty(si, v){
+  const s = cur.sections[si];
+  s._empty = !!v;
+  if(v){ s._backup = { sents: JSON.parse(JSON.stringify(s.sents||[])), text: s.text }; s.sents = []; }
+  renderForm(); updatePreview();
+}
+function restoreSec(si){
+  const s = cur.sections[si];
+  s._empty = false;
+  if(s._backup){
+    if(s._backup.sents && s._backup.sents.length) s.sents = s._backup.sents;
+    if(s.kind==='text' && s._backup.text != null) s.text = s._backup.text;
+  }
+  if(s.kind==='text' && !String(s.text||'').trim()) s.text = defaultTextFor(s);
+  if(s.kind!=='text' && !(s.sents||[]).length && s.ids && s.ids.length){
+    const sen = sentenceById(s.ids[0]); const slots = {};
+    if(sen) parseSlots(sen.en).forEach(sl=>{ slots[sl] = '' });
+    s.sents = [{ id:s.ids[0], slots }];
+  }
+  renderForm(); updatePreview();
+}
+function setFreeText(si,ei,v){ cur.sections[si].sents[ei].text = v; updatePreview(true); }
+/* 主旨句一键填入（题目里已收录本年标准主旨句） */
+function usePlanThesis(si,ei,slot){
+  const st = cur.sections[si].sents[ei];
+  st.slots[slot] = cur.plan.thesis_en || '';
+  renderForm(); updatePreview();
+}
+
+function sentBlock(si, ei, st){
+  const s = cur.sections[si];
+  const { ids, extra, wider } = groupOptions(s);
+  const sen = st.id && st.id!=='__free__' ? sentenceById(st.id) : null;
+  const free = st.id==='__free__';
+  const selected = id => id===st.id ? ' selected' : '';
+  const opt = (id,text,tag)=>`<option value="${id}"${selected(id)}>${tag||''}${esc(optLabel(text))}</option>`;
+  let selOptions = `<option value=""${!st.id?' selected':''}>（不写这句）</option>`
+    + `<option value="__free__"${free?' selected':''}>✍️ 自己写（自由输入）</option>`
+    + ids.map(id=>{ const x=sentenceById(id); return x?opt(id,x.en):'' }).join('');
+  if(extra.length) selOptions += `<optgroup label="▸ 同类其他句型（讲义）">`+extra.map(x=>opt(x.id,x.en)).join('')+`</optgroup>`;
+  if(wider.length) selOptions += `<optgroup label="▸ 可通用的其他句型">`+wider.map(x=>opt(x.id,x.en)).join('')+`</optgroup>`;
+  if(st.aiSents && st.aiSents.length) selOptions += `<optgroup label="🤖 AI 为我生成的句子">`+st.aiSents.map((x,i)=>`<option value="__ai_${i}__"${st.id==='__ai_'+i+'__'?' selected':''}>🤖 ${esc(optLabel(x))}</option>`).join('')+`</optgroup>`;
+
+  let body = `<div class="sb-head"><span class="sb-no">${ei===0?'主句':'补充句 '+(ei+1)}</span>
+    <button class="mini-btn" onclick="removeSent(${si},${ei})">🗑 删除这句</button></div>
+    <select onchange="setSentId(${si},${ei},this.value)">${selOptions}</select>`;
+
+  if(free){
+    body += `<div class="free-box" style="margin-top:8px">
+      <textarea oninput="setFreeText(${si},${ei},this.value)" placeholder="用英文写下你自己的句子（会用你的原句直接成文，AI 批改会一并检查）">${esc(st.text||'')}</textarea>
+      <div class="hint">✍️ 自由句：直接用你的原句成文，不再套模板；段落位置与版式仍按本体系排版，AI 批改会一并检查。</div></div>`;
+  } else if(st.id && /^__ai_\d+__$/.test(st.id)){
+    body += `<div class="ai-sent"><span class="tag-ai">AI 句</span><div class="en">${esc((st.aiSents||[])[+st.id.match(/\d+/)[0]]||'')}</div></div>`;
+    body += `<div class="hint" style="margin-top:6px">AI 生成的句子不含槽位，可直接用；想改内容就切换成「✍️ 自己写」再编辑。</div>`;
+  } else if(sen){
+    body += `<div class="sent-en">${esc(sen.en)}</div>`;
+    const slots = parseSlots(sen.en);
+    const alts = braceAlts(sen.en);
+    if(slots.length){
+      body += `<div class="slot-box">`+slots.map(sl=>{
+        const def = DATA.slotDefs[sl]||{}, exs=(def.examples||[]).slice();
+        const ex = exs[0]||'';
+        const pool = exs.concat(alts[sl]||[]);
+        const others = (DATA.slotDefs[sl]&&DATA.slotDefs[sl].more)||[];
+        const all = Array.from(new Set(pool.concat(others))).filter(Boolean);
+        return `<div class="slot-row"><label>${esc(def.label||sl)} <span style="color:#94a3b8">({{${sl}}})</span></label>
+          <input type="text" value="${esc((st.slots&&st.slots[sl])||'')}" oninput="setSentSlot(${si},${ei},'${sl}',this.value)" placeholder="${esc(ex)}">
+          ${all.length?`<div class="chip-row">${all.slice(0,10).map(v=>`<span class="chip-mini" onclick="setSentSlot(${si},${ei},'${sl}','${v.replace(/'/g,"\\'")}');renderForm()">${esc(v)}</span>`).join('')}</div>`:''}
+          ${(sl==='thesis' && cur.plan && cur.plan.thesis_en)?`<button class="chip-mini" style="background:#fef3c7;border-color:#fbbf24" onclick="usePlanThesis(${si},${ei},'thesis')">💡 用本题主旨句</button>`:''}
+        </div>`;
+      }).join('')+`</div>`;
+    }
+  }
+  return `<div class="sent-block">${body}</div>`;
+}
+function setSentId(si,ei,id){
+  const st = cur.sections[si].sents[ei];
+  const keepAi = st.aiSents;
+  st.id = id||null; st.slots={};
+  if(st.id==='__free__' && typeof st.text!=='string') st.text='';
+  if(keepAi) st.aiSents = keepAi;
+  const sen = (st.id&&st.id!=='__free__'&&!/^__ai_/.test(st.id)) ? sentenceById(st.id) : null;
+  if(sen){
+    const sv = (cur.plan[cur.system]||{}).slot_values||{};
+    parseSlots(sen.en).forEach(sl=>{ st.slots[sl]=sv[sl]||''; });
+  }
+  renderForm(); updatePreview();
+}
+function setSentSlot(si,ei,slot,val){ cur.sections[si].sents[ei].slots[slot]=val; updatePreview(true); }
+function setText(si,val){ cur.sections[si].text=val; updatePreview(true); }
+function addSent(si){
+  const s=cur.sections[si];
+  const { ids, extra } = groupOptions(s);
+  const pool = ids.concat(extra.map(x=>x.id));
+  const used = s.sents.map(x=>x.id);
+  const next = pool.find(id=>!used.includes(id)) || pool[0] || null;
+  const sen = next?sentenceById(next):null;
+  const slots={}; if(sen) parseSlots(sen.en).forEach(sl=>{slots[sl]='';});
+  s.sents.push({ id:next, slots });
+  renderForm(); updatePreview();
+}
+function removeSent(si,ei){ cur.sections[si].sents.splice(ei,1); renderForm(); updatePreview(); }
+
+/* ================= 渲染 ================= */
+/* 斜杠备选兜底：任何残留的 A / B 一律取第一个（讲义中的"A / B"是二选一写法） */
+function stripAlts(text){
+  let t = String(text||'');
+  for(let i=0;i<24 && t.indexOf('/')>=0;i++){
+    const before=t;
+    /* ① 词内斜杠：ongoing/upcoming、learned/found out（可吃掉后面的小品词） */
+    t = t.replace(/([A-Za-z][A-Za-z'\-]*)\/([A-Za-z][A-Za-z'\-]*)(\s+(?:out|up|in|on|off|away|over|back|through))?\b/, '$1');
+    if(t!==before) continue;
+    /* ② 其余（多词备选）：保留第一个备选，砍掉 " / ..." 直到下一个标点 */
+    t = t.replace(/\s*\/\s*[^,.;:!?)]*/, '');
+    if(t===before) break;
+  }
+  return t.replace(/[ \t]{2,}/g,' ')
+          .replace(/([,;:])\1+/g,'$1')
+          .replace(/\s+([,.;:!?])/g,'$1')
+          .trim();
+}
+function renderOne(st){
+  if(!st) return '';
+  if(st.id==='__free__') return String(st.text||'').trim();   // ✍️ 自己写
+  const ai = /^__ai_(\d+)__$/.exec(st.id||'');
+  if(ai) return String((st.aiSents||[])[+ai[1]]||'').trim();  // 🤖 AI 生成句
+  if(!st.id) return '';
+  const sen = sentenceById(st.id); if(!sen) return '';
+  const tpl = normBraces(sen.en);
+  let text = tpl;
+  parseSlots(sen.en).forEach(sl=>{
+    let v = String((st.slots&&st.slots[sl])||'').trim();
+    if(!v){ text = text.replace(new RegExp('\\{\\{'+sl+'\\}\\}','g'), '[['+sl+']]'); return; }
+    /* 模板里已经写了 the / 指示词时，去掉值里多余的 a/an/the（避免 "the a contest"） */
+    const hasDet = new RegExp('(\\bthe|\\bthese|\\bthose|\\bour|\\bmy|\\byour|\\btheir|\\bits|\\bhis|\\bher)\\s+\\{\\{'+sl+'\\}\\}','i').test(tpl);
+    if(hasDet && /^(a|an|the)\s+/i.test(v)) v = v.replace(/^(a|an|the)\s+/i,'');
+    /* 值原本是句首写法（A clear focus），插到句中（First, ___）时改小写冠词 */
+    const idx = tpl.indexOf('{{'+sl+'}}');
+    const prefix = idx>=0 ? tpl.slice(0, idx) : '';
+    const atStart = /^\s*$/.test(prefix) || /[.!?]\s*["“]?\s*$/.test(prefix) || !/[A-Za-z]/.test(prefix);
+    if(!atStart && /^(A|An|The)\s+\S/.test(v)) v = v[0].toLowerCase()+v.slice(1);
+    /* 值本身以句号结尾（p.m. / etc.），模板紧跟句号时不再重复 */
+    if(/\.$/.test(v) && new RegExp('\\{\\{'+sl+'\\}\\}\\s*\\.').test(tpl)) v = v.replace(/\.$/,'');
+    text = text.replace(new RegExp('\\{\\{'+sl+'\\}\\}','g'), v);
+  });
+  return stripAlts(text);
+}
+function renderSentence(s){
+  if(!s || s.hidden || s._empty) return '';
+  if(s.kind==='text') return String(s.text||'').trim();
+  return (s.sents||[]).map(renderOne).filter(Boolean).join(' ');
+}
+function isFilled(s){
+  if(!s || s.hidden) return true;
+  if(s._empty) return true;                       // 整段删掉＝按"本段不计入"处理
+  if(s.kind==='text') return !!String(s.text||'').trim();
+  const list=(s.sents||[]).filter(st=>st.id);
+  if(!list.length) return false;
+  return list.every(st=>{
+    if(st.id==='__free__') return String(st.text||'').trim().length>0;
+    if(/^__ai_\d+__$/.test(st.id)){ const i=+st.id.match(/\d+/)[0]; return !!(st.aiSents&&String(st.aiSents[i]||'').trim()); }
+    const sen=sentenceById(st.id); if(!sen) return false;
+    return parseSlots(sen.en).every(sl=>String((st.slots&&st.slots[sl])||'').trim().length>0);
+  });
+}
+function joinFlow(list){
+  const out=[];
+  list.forEach(t=>{
+    if(/^\.\.\.\s*[,，]/.test(t)&&out.length)
+      out[out.length-1]=out[out.length-1].replace(/[.。]\s*$/,'')+', '+t.replace(/^\.\.\.\s*[,，]\s*/,'');
+    else if(/^\.\.\./.test(t)) out.push(t.replace(/^\.\.\.\s*/,''));
+    else out.push(t);
+  });
+  return out;
+}
+function countWords(text){
+  if(!text) return 0;
+  const clean=text.replace(/\[\[[^\]]+\]\]/g,' ').replace(/[^A-Za-z'\- ]/g,' ');
+  const t=clean.trim(); return t?t.split(/\s+/).filter(Boolean).length:0;
+}
+
+/* ---- 大作文成文：三段，齐头式（顶格、段间空行），无标题无落款 ---- */
+const PARA_KEYS = [1, 2, 3];
+function composeDzw(){
+  const out = [];
+  PARA_KEYS.forEach(n=>{
+    const parts = cur.sections
+      .filter(s=>s.para===n && !s.hidden && !s._empty)
+      .map(s=>renderSentence(s))
+      .filter(Boolean);
+    if(!parts.length) return;
+    out.push(joinFlow(parts).join(' '));
+  });
+  return out.join('\n\n');
+}
+function composeEssay(){ return composeDzw(); }
+/* ---- 预览渲染：大作文三段版式（顶格、段间空行、无标题无落款） ---- */
+let SHOW_GUIDE = true;
+function toggleGuide(){ SHOW_GUIDE=!SHOW_GUIDE; updatePreview(true); }
+function renderPreviewHtml(essay){
+  if(!essay) return '';
+  const paras = essay.split('\n\n');
+  const out = [];
+  paras.forEach((para, i)=>{
+    const sents = para.split(/(?<=[.!?])\s+/).filter(Boolean);
+    const body = esc(para).replace(/\[\[(\w+)\]\]/g,'<span class="ph">【待填：$1】</span>');
+    const mark = SHOW_GUIDE
+      ? ` ［${PARA_LABEL[i+1]||('第'+(i+1)+'段')}·顶格·${countWords(para)} 词·${sents.length} 句］`
+      : '';
+    out.push(`<span class="para">${body}</span>${mark?`<span class="pts">${mark}</span>`:''}`);
+    if(SHOW_GUIDE && i < paras.length-1) out.push('<span class="pts">¶ 空行（段间必须空一行）</span>');
+  });
+  return out.join('\n');
+}
+function copyEssay(){
+  const t = composeEssay();
+  if(!t.trim()){ alert('还没有内容可复制。'); return; }
+  const done = ()=>alert('已复制全文。粘贴到 Word / 记事本后，段落与空行都会保留。');
+  if(navigator.clipboard && navigator.clipboard.writeText){
+    navigator.clipboard.writeText(t).then(done).catch(()=>fallbackCopy(t,done));
+  } else fallbackCopy(t,done);
+}
+function fallbackCopy(t,done){
+  const ta=document.createElement('textarea');
+  ta.value=t; ta.style.position='fixed'; ta.style.opacity='0';
+  document.body.appendChild(ta); ta.select();
+  try{ document.execCommand('copy'); done(); }catch(e){ alert('复制失败，请手动选中预览区文字复制。'); }
+  document.body.removeChild(ta);
+}
+function downloadEssay(){
+  const t = composeEssay();
+  if(!t.trim()){ alert('还没有内容可下载。'); return; }
+  const sys = cur.system==='王晶婷' ? '王晶婷' : '周思成';
+  const name = `${cur.year}英语一小作文_${sys}体系.txt`;
+  const blob = new Blob(['\ufeff'+t], {type:'text/plain;charset=utf-8'});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob); a.download = name;
+  document.body.appendChild(a); a.click();
+  setTimeout(()=>{ URL.revokeObjectURL(a.href); document.body.removeChild(a) }, 500);
+}
+
+function updatePreview(silent){
+  const essay=composeEssay();
+  cur.essay=essay; cur.words=countWords(essay);
+  $('preview').innerHTML = renderPreviewHtml(essay) || '<span class="ph">（还没有内容，请选择句型并填写槽位）</span>';
+  const target=cur.plan.word_target||200;
+  const wcEl=$('wordCount');
+  wcEl.textContent=`当前 ${cur.words} 词 · 目标 160–200 词（底线 160）`;
+  wcEl.className='wc'+(cur.words<160?' bad':'');
+  const missing=cur.sections.filter(s=>s.required&&!s.hidden&&!isFilled(s));
+  const hints=[];
+  if(missing.length) hints.push(`⚠️ 还有 ${missing.length} 处必写内容未完成：${missing.map(m=>m.label).join('、')}`);
+  const ph=(essay.match(/\[\[/g)||[]).length;
+  if(ph) hints.push(`⚠️ 有 ${ph} 个槽位待填写`);
+  if(cur.words>0&&cur.words<160) hints.push(`⚠️ 字数不足 160 词（当前 ${cur.words}）——大作文底线 160 词`);
+  if(cur.words>220) hints.push(`⚠️ 字数偏多（当前 ${cur.words}），建议控制在 160–200 词`);
+  $('liveHints').innerHTML = hints.map(h=>`<div class="check no" style="color:#b45309">${esc(h)}</div>`).join('');
+}
+
+/* ================= 参考答案 / 清空 ================= */
+/* 大作文参考答案：用本年主旨句 + 图画内容把"关键槽位"按语义填实，
+ * 句型按系统骨架的推荐顺序取，不写死某一篇范文（大作文无唯一答案） */
+/* 通用默认值：先按"句型专属表"取，取不到再用这里的通用值 */
+const REF_SLOT_RULES = {
+  thesis:     p => p.thesis_en || '',
+  topic:      p => p.topic_en || p.topic || '',
+  phenomenon: p => p.topic_en || p.topic || '',
+  scene:      p => p.caption_en || 'a thought-provoking scene',
+  detail:     p => 'the details in the picture tell the whole story',
+  focus:      p => 'the contrast presented in the picture claims our attention',
+  caption:    p => p.caption_word_en ? '"' + p.caption_word_en + '"' : '',
+  sth:        p => p.genre === 'chart' ? 'some striking statistics' : 'a scene worth pondering',
+  content:    p => p.caption_en || 'the changes in the figures',
+  data:       p => 'the figures rose steadily over the period',
+  conclusion: p => (p.topic_en ? p.topic_en + ' deserves our constant attention' : 'the phenomenon deserves our constant attention'),
+  goal:       p => (p.topic_en ? 'build a society where ' + p.topic_en + ' is truly valued' : 'embrace a brighter future'),
+  quote:      p => 'Where there is a will, there is a way.',
+  speaker:    p => 'an old proverb',
+  person:     p => 'Yuan Longping',
+  cause:      p => 'perseverance and self-discipline',
+  result:     p => 'feed billions of people and win worldwide respect',
+  action:     p => 'take concrete and sustained action',
+  subject:    p => 'the university',
+  reason1:    p => 'society and technology have made remarkable progress in recent years',
+  reason2:    p => 'people\u2019s values and lifestyle have shifted considerably',
+  side1:      p => 'some people hold a positive view',
+  side2:      p => 'others remain indifferent or even negative',
+  condition:  p => 'people fail to realise the value of ' + (p.topic_en || 'it'),
+  consequence:p => 'the whole society will pay a heavy price',
+  left:       p => 'one student complains about the heavy burden',
+  right:      p => 'another student sets to work immediately',
+  place:      p => 'the desk',
+};
+
+/* 句型专属填法：同一个槽位在不同句子里需要的词形不同（如 only by + 动名词 / should + 动词原形） */
+const REF_BY_SENT = {
+  /* —— 鲁述钊 —— */
+  lsz_p1_describe_pic:  p => ({ scene: p.caption_en, detail: 'the figures and words in the picture carry a clear message', focus: 'the contrast between the two sides claims our attention' }),
+  lsz_p2_thesis1:       p => ({ thesis: p.thesis_en }),
+  lsz_p2_thesis2:       p => ({ thesis: p.thesis_en }),
+  lsz_p2_thesis3:       p => ({ thesis: p.thesis_en }),
+  lsz_p2_thesis4:       p => ({ thesis: p.thesis_en }),
+  lsz_p2_reason_one:    p => ({ reason1: 'the rapid development of society and technology has changed the way people live and think' }),
+  lsz_p2_reason_two:    p => ({ condition: 'people fail to realise the value of ' + (p.topic_en || 'it'), consequence: 'the whole society will pay a heavy price', reason2: 'education has raised people\u2019s awareness of ' + (p.topic_en || 'this issue') }),
+  lsz_p2_example:       p => ({ person: 'Yuan Longping', cause: 'decades of perseverance and self-discipline', result: 'feed billions of people and win worldwide respect' }),
+  lsz_p3_conclusion:    p => ({ conclusion: (p.topic_en || 'the phenomenon') + ' is indispensable to a better society' }),
+  lsz_p3_conclusion2:   p => ({ conclusion: (p.topic_en || 'the phenomenon') + ' deserves our constant attention' }),
+  lsz_p3_importance:    p => ({ topic: p.topic_en || 'this quality' }),
+  lsz_p3_suggest:       p => ({ subject: 'the university', action: 'organise more activities that encourage ' + (p.topic_en || 'such behaviour') }),
+  lsz_p3_quote:         p => ({ person: 'Thomas Edison', quote: 'Genius is one percent inspiration and ninety-nine percent perspiration.' }),
+  lsz_p3_only:          p => ({ goal: 'embrace a brighter future' }),
+  /* —— 王晶婷 —— */
+  wjt_p1_s1_3:          p => ({ sth: p.genre === 'chart' ? 'some striking statistics' : 'a scene worth pondering' }),
+  wjt_p1_s1_3_1:        p => ({ sth: p.genre === 'chart' ? 'some striking statistics' : 'two contrasting scenes' }),
+  wjt_p1_s1_1:          p => ({ phenomenon: p.topic_en || 'a common social' }),
+  wjt_p1_s1_1L:         p => ({ topic: p.topic_en || 'this issue' }),
+  wjt_p1_s1_5:          p => ({ sentence: p.caption_en || 'a scene worth pondering' }),
+  wjt_p1_s1_9:          p => ({ sentence: p.caption_en || 'a scene worth pondering' }),
+  wjt_p1_s23:           p => ({ place: 'the desk', person: 'young student', detail: 'is staring at the screen instead of talking with others' }),
+  wjt_p1_s23_1:         p => ({ place: 'the desk', person: 'young student', detail: 'is staring at the screen instead of talking with others' }),
+  wjt_p1_s23b:          p => ({ left: 'one student complains about the heavy burden', right: 'another student sets to work immediately' }),
+  wjt_p1_s4_1:          p => ({ caption: p.caption_word_en ? '"' + p.caption_word_en + '"' : '' }),
+  wjt_p1_s4_1_1:        p => ({ caption: p.caption_word_en ? '"' + p.caption_word_en + '"' : '' }),
+  wjt_p1_s4_2:          p => ({ caption: p.caption_word_en ? '"' + p.caption_word_en + '"' : '' }),
+  wjt_p1_s4_3:          p => ({ caption: p.caption_word_en ? '"' + p.caption_word_en + '"' : '' }),
+  wjt_p1_chart_s1:      p => ({ content: p.caption_en || 'the changes in the figures' }),
+  wjt_p2_s1_1:          p => ({ topic: p.topic_en || 'this issue' }),
+  wjt_p2_s1_1_1:        p => ({ thesis: p.thesis_en }),
+  wjt_p2_s1_2:          p => ({ topic: p.topic_en || 'this issue' }),
+  wjt_p2_s1_3:          p => ({ topic: p.topic_en || 'this issue' }),
+  wjt_p2_s1_5:          p => ({ topic: p.topic_en || 'this issue' }),
+  wjt_r_tech:           p => ({ action: 'communicate and work with one another' }),
+  wjt_r_global:         p => ({ action: 'make such a choice', phenomenon: 'the trend appears' }),
+  wjt_r_money:          p => ({ phenomenon: 'the trend appears' }),
+  wjt_r_mood:           p => ({}),
+  wjt_r_shift:          p => ({ topic: p.topic_en || 'this issue' }),
+  wjt_r_culture:        p => ({ action: 'to follow their own interests' }),
+  wjt_r_gov:            p => ({ action: 'behave in daily life' }),
+  wjt_r_media:          p => ({ action: 'follow the trend' }),
+  wjt_r_person:         p => ({ action: 'act in the right way' }),
+  wjt_r_crisis:         p => ({}),
+  wjt_p3_s1_1:          p => ({ topic: p.topic_en || 'this issue' }),
+  wjt_p3_s3:            p => ({ action: 'taking concrete and sustained action', goal: 'build a society where ' + (p.topic_en || 'it') + ' is truly valued' }),
+  /* —— DeepSeek —— */
+  ds_p1_open_1:         p => ({ scene: p.caption_en || 'a scene worth pondering' }),
+  ds_p1_open_2:         p => ({ scene: p.caption_en || 'a scene worth pondering' }),
+  ds_p1_open_3:         p => ({ scene: p.caption_en || 'a scene worth pondering' }),
+  ds_p1_open_4:         p => ({ scene: p.caption_en || 'a scene worth pondering' }),
+  ds_p1_chart_1:        p => ({ content: p.caption_en || 'the changes in the figures' }),
+  ds_p1_chart_2:        p => ({ content: p.caption_en || 'the changes in the figures' }),
+  ds_p1_detail_1:       p => ({ detail: p.genre === 'chart' ? 'the figures have climbed steadily over the past decade' : 'the contrast between the two sides is striking' }),
+  ds_p1_detail_2:       p => ({ detail: p.genre === 'chart' ? 'the figures have climbed steadily over the past decade' : 'the contrast between the two sides is striking' }),
+  ds_p1_detail_3:       p => ({ detail: p.genre === 'chart' ? 'the figures have climbed steadily over the past decade' : 'the contrast between the two sides is striking' }),
+  ds_p1_caption_1:      p => ({ caption: p.caption_word_en || '' }),
+  ds_p1_caption_2:      p => ({ caption: p.caption_word_en || '' }),
+  ds_p2_thesis_1:       p => ({ thesis: p.thesis_en }),
+  ds_p2_thesis_2:       p => ({ thesis: p.thesis_en }),
+  ds_p2_thesis_3:       p => ({ thesis: p.thesis_en }),
+  ds_p2_thesis_4:       p => ({ thesis: p.thesis_en }),
+  ds_p2_reason_1:       p => ({ reason1: 'the rapid development of society and technology has changed the way people live and think' }),
+  ds_p2_reason_2:       p => ({ reason2: 'education has raised people\u2019s awareness of ' + (p.topic_en || 'this issue') }),
+  ds_p2_reason_3:       p => ({ reason2: 'education has raised people\u2019s awareness of ' + (p.topic_en || 'this issue') }),
+  ds_p2_example_1:      p => ({ person: 'Yuan Longping', cause: 'decades of perseverance', result: 'feed billions of people' }),
+  ds_p2_example_2:      p => ({ person: 'Yuan Longping', cause: 'decades of perseverance', result: 'feed billions of people' }),
+  ds_p3_conclusion_1:   p => ({ conclusion: (p.topic_en || 'the phenomenon') + ' is indispensable to a better society' }),
+  ds_p3_conclusion_2:   p => ({ conclusion: (p.topic_en || 'the phenomenon') + ' that deserves our constant attention' }),
+  ds_p3_suggest_1:      p => ({ subject: 'the university', action: 'organise more activities that encourage ' + (p.topic_en || 'such behaviour') }),
+  ds_p3_suggest_2:      p => ({ subject: 'the university', action: 'encourage ' + (p.topic_en || 'such behaviour') }),
+  ds_p3_suggest_3:      p => ({ action: 'start with small things', topic: p.topic_en || 'this quality' }),
+  ds_p3_outlook_1:      p => ({ goal: 'embrace a brighter future' }),
+  ds_p3_outlook_2:      p => ({ goal: 'embrace a brighter future' }),
+  ds_p3_outlook_3:      p => ({ goal: 'embrace a brighter future' }),
+};
+
+function refSlot(sl, plan, sentId) {
+  const bySent = REF_BY_SENT[sentId];
+  if (bySent) {
+    const m = bySent(plan) || {};
+    if (Object.prototype.hasOwnProperty.call(m, sl)) return m[sl];
+  }
+  const f = REF_SLOT_RULES[sl];
+  if (f) return f(plan);
+  const def = DATA.slotDefs[sl];
+  return (def && def.examples && def.examples[0]) || '';
+}
+function fillReferenceSilent(){
+  const plan = cur.plan || {};
+  cur.sections.forEach(s => {
+    const ids = (s.ids && s.ids.length) ? [s.ids[0]] : [];
+    s._empty = false;
+    s.sents = ids.map(id => {
+      const sen = sentenceById(id), slots = {};
+      if (sen) parseSlots(sen.en).forEach(sl => { slots[sl] = refSlot(sl, plan, id) });
+      return { id, slots };
+    });
+    /* 本题没有对应素材（如图里没有文字）→ 可选小节直接不写 */
+    const st = s.sents[0];
+    if (st && st.id && !s.required) {
+      const sen = sentenceById(st.id);
+      const need = sen ? parseSlots(sen.en) : [];
+      if (need.length && need.some(sl => !String(st.slots[sl] || '').trim())) s._empty = true;
+    }
+  });
+}
+function fillReference(){ fillReferenceSilent(); renderForm(); updatePreview(); }
+function clearAll(){
+  cur.sections.forEach(s => {
+    s._empty = false; s._backup = null;
+    s.sents = (s.ids && s.ids.length) ? [{ id: s.ids[0], slots: {} }] : [];
+    const st = s.sents[0];
+    if (st && st.id) {
+      const sen = sentenceById(st.id);
+      if (sen) parseSlots(sen.en).forEach(sl => { st.slots[sl] = prefillSlot(sl) });
+    }
+  });
+  renderForm(); updatePreview(); window.scrollTo({top:0, behavior:'smooth'});
+}
+function referenceEssay(){
+  const saved = cur.sections.map(s => ({ sents: JSON.parse(JSON.stringify(s.sents||[])), _empty: s._empty }));
+  fillReferenceSilent();
+  const txt = composeEssay();
+  cur.sections.forEach((s,i) => { s.sents = saved[i].sents; s._empty = saved[i]._empty });
+  return txt;
+}
+
+/* ================= 批改评分 ================= */
+const SPELL = { 'adress':'address','recieve':'receive','seperate':'separate','occured':'occurred','begining':'beginning',
+  'enviroment':'environment','sucess':'success','acheive':'achieve','definately':'definitely','wich':'which','teh':'the',
+  'thier':'their','alot':'a lot','untill':'until','writting':'writing','comming':'coming','tommorow':'tomorrow',
+  'greate':'great','studing':'studying','interrested':'interested','carrers':'careers','advices':'advice',
+  'informations':'information','researches':'research','equipments':'equipment' };
+const PROPER = { 'english':'English','chinese':'Chinese','china':'China','monday':'Monday','tuesday':'Tuesday',
+  'wednesday':'Wednesday','thursday':'Thursday','friday':'Friday','saturday':'Saturday','sunday':'Sunday',
+  'january':'January','february':'February','march':'March','april':'April','june':'June','july':'July',
+  'august':'August','september':'September','october':'October','november':'November','december':'December' };
+
+/* ---------- 语法与用法规则表（正则, 类型, 改写建议, 中文原因；原因 null = 永不报）
+ * 已用讲义 42 篇范文校验 0 误报、33 个植入错误 100% 检出（见 tmp/test-grammar.mjs） ---------- */
+const GERUND = { hear:'hearing', see:'seeing', receive:'receiving', get:'getting', meet:'meeting',
+  visit:'visiting', join:'joining', take:'taking', attend:'attending', work:'working', help:'helping',
+  write:'writing', study:'studying', read:'reading', watch:'watching', play:'playing', do:'doing',
+  make:'making', offer:'offering', know:'knowing', come:'coming', go:'going' };
+/* ---------- 改写辅助：把"提示"变成"可以直接照抄的正确写法" ---------- */
+const NO_AN = /^(uni|use|usu|uni|eur|one|once)/i;           // 读 /juː/ 或 /wʌ/，前面用 a
+const AN_WORDS = /^(hour|honest|honou?r|heir)/i;            // h 不发音，前面用 an
+function artFor(w){
+  const s = String(w||'');
+  if(AN_WORDS.test(s)) return 'an';
+  if(NO_AN.test(s)) return 'a';
+  return /^[aeiou]/i.test(s) ? 'an' : 'a';
+}
+const PRONOUN = { me:'I', us:'we', him:'he', her:'she', them:'they', you:'you', students:'students', sb:'one' };
+const PARTICIPLE = { go:'gone', come:'come', offer:'offered', provide:'provided', hold:'held', attend:'attended',
+  take:'taken', make:'made', give:'given', help:'helped', include:'included', be:'been', do:'done',
+  write:'written', send:'sent', join:'joined', visit:'visited', go2:'gone', went:'gone', came:'come',
+  took:'taken', gave:'given', did:'done', wrote:'written', saw:'seen', began:'begun', chose:'chosen',
+  spoke:'spoken', ran:'run', drew:'drawn', drove:'driven', flew:'flown', forgot:'forgotten', grew:'grown',
+  rose:'risen', sang:'sung', shook:'shaken', stole:'stolen', swam:'swum', threw:'thrown', woke:'woken', wore:'worn' };
+const PAST2BASE = { offered:'offer', provided:'provide', held:'hold', attended:'attend', took:'take', made:'make',
+  gave:'give', helped:'help', included:'include', had:'have', did:'do', wrote:'write', sent:'send',
+  joined:'join', visited:'visit', received:'receive', met:'meet', worked:'work', studied:'study',
+  learned:'learn', improved:'improve', developed:'develop', organized:'organize', created:'create',
+  participated:'participate', achieved:'achieve', completed:'complete', prepared:'prepare', brought:'bring',
+  started:'start', continued:'continue', kept:'keep', found:'find', showed:'show', told:'tell',
+  asked:'ask', answered:'answer', shared:'share', supported:'support', expressed:'express',
+  extended:'extend', invited:'invite', recommended:'recommend', suggested:'suggest', applied:'apply',
+  registered:'register', signed:'sign', contacted:'contact', considered:'consider',
+  understood:'understand', knew:'know', thought:'think', wanted:'want', decided:'decide', chose:'choose',
+  tried:'try', allowed:'allow', enabled:'enable', encouraged:'encourage', ensured:'ensure',
+  reduced:'reduce', increased:'increase', built:'build', focused:'focus', spent:'spend', saved:'save',
+  discussed:'discuss', arranged:'arrange', selected:'select', submitted:'submit', confirmed:'confirm',
+  informed:'inform', reminded:'remind', appreciated:'appreciate', celebrated:'celebrate',
+  collected:'collect', interviewed:'interview', assisted:'assist', guided:'guide', served:'serve',
+  enjoyed:'enjoy', went:'go' };
+const ZH_PUNCT = { '，':',', '。':'.', '；':';', '：':':', '！':'!', '？':'?', '（':'(', '）':')',
+  '【':'[', '】':']', '、':',', '“':'"', '”':'"', '‘':"'", '’':"'" };
+const IRREG_PAST = 'went|took|made|gave|had|did|wrote|sent|saw|held|found|got|became|began|chose|spoke|taught|thought|understood|kept|left|met|paid|read|ran|said|sat|slept|spent|stood|told|won|brought|bought|caught|drew|drove|felt|fought|flew|forgot|grew|heard|hit|hurt|lost|meant|put|rose|sold|sang|shook|shone|shot|shut|spread|stole|struck|swept|swam|threw|woke|wore';
+const VSTEM = 'offer|provid|hold|attend|tak|mak|giv|help|includ|hav|do|writ|send|join|visit|receiv|meet|work|stud|learn|improv|develop|organiz|creat|participat|achiev|complet|prepar|bring|start|continu|keep|find|show|tell|ask|answer|share|support|express|extend|invit|recommend|suggest|apply|regist|sign|contact|consider|understand|know|think|want|decid|choos|try|allow|enabl|encourag|ensur|maintain|reduc|increas|build|focus|spend|save|discuss|arrang|select|submit|confirm|inform|remind|persuad|appreciat|celebrat|decorat|collect|interview|assist|guid|serv|enjoy|improve';
+const GRAMMAR = [
+  /* ---------- 1. 冠词 ---------- */
+  /* a + 元音字母开头，但排除读 /juː/ 的词（a university / a useful / a one-way） */
+  [/\ba\s+((?:[aei]|o(?!ne\b|nce\b)|u(?!(?:ni|se|su|ro|tili|niform|nion|nivers|nique|nite|nited|ser|sual|sually|ropean|rope)))[a-z]\w*)/gi,
+    'article', function(m){ return 'an ' + m[1] }, 'a 后面接元音音素要用 an（a English → an English；注意 a university 是正确的）'],
+  [/\ba\s+((?:hour|honest|honou?r|heir)\w*)/g, 'article', function(m){ return 'an ' + m[1] },
+    'h 不发音的词要用 an（an hour / an honest boy）'],
+  [/\ban\s+((?:[bcdfgjklmnpqrstvwxyz])[a-z]\w*)/gi, 'article', function(m){ return 'a ' + m[1] },
+    'an 后面接辅音音素要用 a（an university → a university）'],
+  [/\b(a|an|the)\s+(a|an|the)\b/gi, 'article', '$2',
+    '冠词重复：一个名词前只能有一个冠词'],
+  [/\b(hold|holds|holding|host|hosts|hosting|organize|organizes|organizing|attend|attends|attending|join|joins|joining|launch|launches)\s+((?:singing|speech|english|campus|food|sports|sport|volunteer|charity|photo|photography|reading|new|international|graduation|welcome|opening|closing|farewell|annual|special|online|group|team|class|paper)\b)/gi,
+    'article', function(m){ return m[1] + ' ' + artFor(m[2]) + ' ' + m[2] }, 'hold/host/attend 等及物动词后接单数可数名词要加冠词（hold a singing contest）'],
+  [/\bon\s+the\s+(morning|afternoon|evening)\b/gi, 'prep', 'in the $1',
+    '固定搭配是 in the morning / in the afternoon / in the evening'],
+
+  /* ---------- 2. 主谓一致 ---------- */
+  [/\bI\s+(is|are|were|has|having)\b/g, 'agreement', function(m){ return 'I ' + ({is:'am',are:'am',were:'was',has:'have',having:'have'}[m[1].toLowerCase()]) },
+    'I 后面的 be 动词用 am/was，助动词用 have'],
+  [/\b(he|she|it|everyone|everybody|someone|somebody|nobody|each)\s+(are|were|have|do|go|come|offer|provide|include|seem|need|want|help)\b/gi,
+    'agreement', null, '第三人称单数主语要用 is/was/has/does，或谓语动词加 -s'],
+  [/\b(they|we|you|students|teachers|volunteers|people|participants|applicants)\s+(is|was|has|does)\b/gi,
+    'agreement', function(m){ return m[1] + ' ' + ({is:'are',was:'were',has:'have',does:'do'}[m[2].toLowerCase()]) }, '复数主语不能用 is/was/has/does'],
+  [/\bthere\s+is\s+(many|several|two|three|four|five|a\s+lot\s+of|lots\s+of|numerous)\b/gi,
+    'agreement', function(m){ return 'there are ' + m[1] }, 'there be 就近一致：复数要用 there are'],
+  [/\bthere\s+are\s+(a|an|one)\s+\w+\b/gi, 'agreement', null,
+    'there be 就近一致：单数要用 there is'],
+  [/\b(the\s+(?:event|contest|festival|activity|project|programme|program|exhibition|ceremony|party|meeting|report|letter|notice|library|university|speech|competition|lecture|conference|seminar|workshop|club|camp|course|service|show|visit|trip)\s+(?:offer|provide|include|feature|take|run|start|begin|help|allow|give|need|require|draw|attract|last|consist))\b/gi,
+    'agreement', function(m){ return m[1] + 's' }, '单数主语后面的谓语要加 -s（The event offers…）'],
+
+  /* ---------- 3. 动词形式与时态 ---------- */
+  [/\b(will|shall|can|could|may|might|must|should|would)\s+(\w+)(ed|s)\b/gi, 'verb',
+    function(m){ var b = PAST2BASE[m[2].toLowerCase()+m[3]] || PAST2BASE[m[2].toLowerCase()] || m[2]; return m[1] + ' ' + b },
+    '情态动词后面必须用动词原形（will offered → will offer）'],
+  [/\b(is|are|was|were|be|been|being)\s+(go|come|offer|provide|hold|attend|take|make|give|help|include|have|do|write|send|join|visit)\b/gi,
+    'verb', null, 'be 动词后面不能用动词原形（is go → goes / is going）'],
+  [/\b(have|has|had)(?:\s+(?:already|just|never|ever|also|recently|finally|still|now|only|not|n't|been|being|always|often|really|simply))*\s+(go|come|offer|provide|hold|attend|take|make|give|help|include|be|do|write|send|join|visit|went|came|took|gave|did|wrote|saw|began|chose|spoke|ran|drew|drove|flew|forgot|grew|rose|sang|shook|stole|swam|threw|woke|wore)\b/gi,
+    'verb', function(m){ var v = PARTICIPLE[m[2].toLowerCase()] || m[2]; return m[0].replace(new RegExp(m[2]+'$'), v) }, '完成时要用过去分词（has go → has gone）'],
+  /* to + 过去式：用动词词干白名单，避免误伤 to students / to this 这类名词短语 */
+  [/\bto\s+((?:offer|provid|hold|attend|tak|mak|giv|help|includ|hav|do|writ|send|join|visit|receiv|meet|work|stud|learn|improv|develop|organiz|creat|participat|achiev|complet|prepar|bring|start|continu|keep|find|show|tell|ask|answer|share|support|express|extend|invit|recommend|suggest|apply|regist|sign|contact|consider|understand|know|think|want|decid|choos|try|allow|enabl|encourag|ensur|maintain|reduc|increas|build|focus|spend|save|discuss|arrang|select|submit|confirm|inform|remind|persuad|appreciat|celebrat|decorat|collect|interview|assist|guid|serv|enjoy|improve)ed)\b/gi,
+    'verb', function(m){ return 'to ' + (PAST2BASE[m[1].toLowerCase()] || m[1]) }, '不定式 to 后面用动词原形（to offered → to offer）'],
+  [/\bto\s+(went|took|made|gave|had|did|wrote|sent|saw|held|found|got|became|began|chose|spoke|taught|thought|understood|kept|left|met|paid|read|ran|said|sat|slept|spent|stood|told|won|brought|bought|caught|drew|drove|felt|fought|flew|forgot|grew|heard|hit|hurt|lost|meant|put|rose|sold|sang|shook|shone|shot|shut|spread|stole|struck|swept|swam|threw|woke|wore)\b/gi,
+    'verb', function(m){ return 'to ' + (PAST2BASE[m[1].toLowerCase()] || m[1]) },
+    '不定式 to 后面用动词原形，不能用过去式（to took → to take）'],
+  [/\b(did|didn't|did not)\s+(\w+)(ed|s)\b/gi, 'verb',
+    function(m){ return m[1] + ' ' + (PAST2BASE[m[2].toLowerCase()+m[3]] || m[2]) },
+    'did 后面用动词原形，不再变过去式（did went → did go）'],
+  [/\b(look(?:ing)?\s+forward\s+to)\s+(hear|see|receive|get|meet|visit|join|take|attend|work|help|write|study|read|watch|play|do|make)\b/gi,
+    'verb', function(m){ return m[1] + ' ' + (GERUND[m[2].toLowerCase()] || (m[2]+'ing')) }, 'look forward to 的 to 是介词，后面必须接动名词（look forward to hearing from you）'],
+  [/\b(interested\s+in|good\s+at|succeed\s+in|insist\s+on|be\s+used\s+to|devote\s+to|pay\s+attention\s+to|be\s+fond\s+of|dream\s+of|think\s+of|hear\s+of|feel\s+like|spend\s+time\s+in)\s+(do|make|take|help|offer|join|write|attend|visit|study|work|read|watch|play|know|come|go)\b/gi,
+    'verb', function(m){ return m[1] + ' ' + (GERUND[m[2].toLowerCase()] || (m[2]+'ing')) }, '介词后面要接动名词（be interested in doing / good at speaking）'],
+  [/\b(suggest|recommend|advise)\s+(me|us|him|her|them|you|students|sb)\s+to\s+(\w+)/gi,
+    'verb', function(m){ return m[1] + ' that ' + (PRONOUN[m[2].toLowerCase()]||m[2]) + ' (should) ' + m[3] }, 'suggest/recommend 不能说 suggest sb to do，要用 suggest that sb (should) do'],
+  [/\bhope\s+(me|us|him|her|them|you)\s+to\s+do\b/gi, 'verb', null,
+    'hope 不能接 sb to do，要用 hope that sb will do'],
+
+  /* ---------- 4. 介词与固定搭配 ---------- */
+  [/\bcontact\s+with\s+(me|us|you|him|her|them)\b/gi, 'collocation', function(m){ return 'contact ' + m[1] },
+    'contact 是及物动词，直接说 contact me，不加 with'],
+  [/\bdiscuss\s+about\b/gi, 'collocation', 'discuss', 'discuss 及物，不加 about（discuss the plan）'],
+  [/\bparticipate\s+(the|a|an|our|this)\b/gi, 'collocation', null,
+    'participate 后要加 in（participate in the contest）'],
+  [/\battend\s+to\s+(the\s+)?(meeting|contest|class|lecture|ceremony|party|conference)\b/gi,
+    'collocation', null, 'attend 表示"参加"时是及物动词，不加 to'],
+  [/\bresponsible\s+of\b/gi, 'collocation', 'responsible for', 'responsible for 是固定搭配'],
+  [/\binterested\s+about\b/gi, 'collocation', 'interested in', 'interested in 是固定搭配'],
+  [/\bgood\s+in\s+(english|chinese|maths|math|communication|writing|speaking)\b/gi,
+    'collocation', function(m){ return 'good at ' + m[1] }, 'good at 是固定搭配（good at English）'],
+  [/\bin\s+(monday|tuesday|wednesday|thursday|friday|saturday|sunday)\b/gi,
+    'collocation', function(m){ return 'on ' + m[1] }, '具体某一天用 on（on Monday）'],
+  [/\bon\s+((?:19|20)\d{2})\b/g, 'collocation', function(m){ return 'in ' + m[1] }, '年份前用 in（in 2026）'],
+  [/\barrive\s+to\s+(the\s+)?(station|airport|campus|city|university|hall|center|centre)\b/gi,
+    'collocation', null, 'arrive at（小地点）/ arrive in（大地点），不用 arrive to'],
+  [/\breply\s+(your|the|my|his|her|their)\s+(letter|email|mail|message)\b/gi,
+    'collocation', function(m){ return 'reply to ' + m[1] + ' ' + m[2] }, 'reply to your letter 要加 to'],
+  [/\bpay\s+attention\s+on\b/gi, 'collocation', 'pay attention to', 'pay attention to 是固定搭配'],
+  [/\bthank(?:s)?\s+for\s+your\s+help\s+me\b/gi, 'collocation', 'thank you for helping me',
+    'Thank you for 后面接动名词'],
+
+  /* ---------- 5. 可数/不可数名词 ---------- */
+  [/\b(an?|many|several|few|these|those|two|three)\s+(information|advice|equipment|furniture|news|knowledge|progress|homework|money|luggage|baggage|traffic)\b/gi,
+    'noun', function(m){ return m[0].replace(/^(an?|many|several|few|these|those|two|three)\s+/i, 'a piece of ') }, '该名词不可数，不能用 a/an/many 修饰（a useful piece of advice）'],
+  [/\ba\s+research\b(?!\s+\w)/gi, 'noun', 'a piece of research',
+    'research 不可数，泛指不加 a（a research project 可以，单独 a research 不行）'],
+  [/\b(information|advice|equipment|knowledge|homework|furniture)s\b/gi,
+    'noun', function(m){ return m[1] }, '不可数名词不加 -s'],
+  [/\bpeoples\b/gi, 'noun', 'people', 'people 本身就是复数'],
+  [/\b(many|a\s+lot\s+of|lots\s+of)\s+(much|less)\b/gi, 'noun', function(m){ return 'much ' + (m[2]==='less'?'less':'more') },
+    'many 修饰可数名词，much 修饰不可数名词'],
+  [/\bmuch\s+(students|people|books|suggestions|activities|volunteers|dishes|reasons)\b/gi,
+    'noun', function(m){ return 'many ' + m[1] }, 'much 只能修饰不可数名词，可数名词用 many'],
+  [/\bthe\s+both\b/gi, 'noun', 'both', 'both 前面不加 the'],
+
+  /* ---------- 6. 比较级 / 常见结构 ---------- */
+  [/\bmore\s+(better|worse|easier|harder|faster|bigger|smaller|higher|lower|more)\b/gi,
+    'structure', function(m){ return m[1] }, '比较级不能与 more 连用（better，不是 more better）'],
+  [/\bmost\s+(best|worst|easiest|hardest|cheapest|biggest)\b/gi, 'structure', function(m){ return m[1] },
+    '最高级不能与 most 连用（the best）'],
+  [/\bso\s+that\s+can\b/gi, 'structure', 'so that we can', 'so that 后面要有主语（so that we can / so that students can）'],
+  [/\balthough\b[^.;]*?\bbut\b/gi, 'structure', function(m){ return m[0].replace(/\s*\bbut\b/,'') }, 'although 与 but 不能同时用：although 已表示让步，删掉 but'],
+  [/\bbecause\b[^.;]*?\bso\b/gi, 'structure', function(m){ return m[0].replace(/\s*\bso\b/,'') }, 'because 与 so 不能同时用：because 已表示原因，删掉 so'],
+  [/\bcan\s+not\b/g, 'style', 'cannot', 'cannot 通常写成一个词'],
+  [/\bcan't\s+hardly\b/gi, 'structure', 'can hardly', "can't 与 hardly 构成双重否定"],
+  [/\bin\s+nowadays\b/gi, 'collocation', 'nowadays', 'nowadays 本身就是副词，前面不加 in'],
+  [/\bthe\s+nowadays\b/gi, 'collocation', 'nowadays', 'nowadays 前不加冠词'],
+
+  /* ---------- 7. 中式表达 / 地道性 ---------- */
+  [/\bvery\s+(delicious|perfect|excellent|wonderful)\b/gi, 'chinglish', function(m){ return m[1] },
+    'very 不能修饰本身已含"极度"含义的形容词（delicious / perfect）'],
+  [/\bI\s+very\s+(like|love|want|need|hope)\b/gi, 'chinglish', function(m){ return 'I ' + m[1] + ' ... very much' },
+    '中文"我很喜欢"的顺序不对：I like it very much'],
+  [/\b(learn|master|study)\s+(?:a\s+lot\s+of\s+|more\s+|much\s+|some\s+)?knowledge\b/gi, 'chinglish', 'gain knowledge',
+    'learn knowledge 是中式搭配，用 gain / acquire knowledge'],
+  [/\bopen\s+the\s+(light|lamp)\b/gi, 'chinglish', function(m){ return 'turn on the ' + m[1] }, '中文"开灯"是 turn on the light'],
+  [/\bclose\s+the\s+(light|lamp)\b/gi, 'chinglish', function(m){ return 'turn off the ' + m[1] }, '中文"关灯"是 turn off the light'],
+  [/\baccording\s+to\s+me\b/gi, 'chinglish', 'in my opinion', 'according to me 不地道，用 in my opinion'],
+  [/\bplay\s+an?\s+important\s+role\s+in\s+our\s+life\b/gi, 'chinglish', function(m){ return m[0].replace(/life\b/,'lives') },
+    '泛指应为 lives（可数名词泛指用复数）'],
+  [/\bwith\s+the\s+development\s+of\s+(society|the\s+society)\b/gi, 'chinglish', null,
+    '这是被阅卷老师标记的万能套话，小作文里不要用'],
+  [/\bvery\s+much\s+thank\s+you\b/gi, 'chinglish', 'thank you very much', '语序：thank you very much'],
+  [/\bplease\s+you\s+(do|come|join|help|give)\b/gi, 'chinglish', 'please $1', 'please 后面直接接动词'],
+
+  /* ---------- 8. 标点与大小写 ---------- */
+  [/[\u4e00-\u9fa5]/, 'chinese', null, '正文混入了中文，英文作文里不能出现汉字'],
+  [/\s+[,;:!?]|\s+\.(?!\.)/g, 'punct', null, '标点前不应有空格'],
+  [/(?<!\.)\.\.(?!\.)/g, 'punct', null, '一个句号就够，不要写两个'],
+  [/(?<!\.)([!?])\1+(?!\.)/g, 'punct', null, '句末标点只写一个'],
+  [/[，。；：！？（）【】、]/g, 'punct', function(m){ return ZH_PUNCT[m[0]] || '' }, '英文里要用英文标点：中文全角标点要换成半角'],
+  [/\b(i)\b/g, 'case', 'I', '人称代词 i 永远大写'],
+  [/\b(english|chinese|china|japan|japanese|america|american|britain|british|canada|australia)\b/g,
+    'case', function(m){ return m[1].charAt(0).toUpperCase() + m[1].slice(1) }, '专有名词要大写'],
+  [/\b(monday|tuesday|wednesday|thursday|friday|saturday|sunday)\b/g, 'case', function(m){ return m[1].charAt(0).toUpperCase() + m[1].slice(1) }, '星期要大写'],
+  [/\b(january|february|march|april|june|july|august|september|october|november|december)\b/g,
+    'case', function(m){ return m[1].charAt(0).toUpperCase() + m[1].slice(1) }, '月份要大写'],
+  [/\bmay\s+(?=\d{1,2}\b)/g, 'case', null, '月份 May 要大写（别与情态动词 may 混淆）'],
+  [/\b(student\s+union|english\s+club|the\s+great\s+wall)\b/g, 'case', null, '专有机构/景点名要大写'],
+  [/^([a-z])/m, 'case', null, '句首字母要大写'],
+
+  /* ---------- 9. 句子层面 ---------- */
+  [/(?:\b[\w'-]+\b\s+){45,}\b[\w'-]+\b/g, 'sentence', null,
+    '单句超过 45 词，容易写成流水句，建议拆成两句'],
+  /* ---------- 10. 大作文专项 ---------- */
+  [/\bthe number of \w+ (?:are|were|have)\b/gi, 'agreement', function(m){ return m[0].replace(/\b(are|were|have)\b/, function(v){ return v === 'are' ? 'is' : v === 'were' ? 'was' : 'has' }) },
+    'the number of + 复数名词 作主语时谓语用单数（the number of visitors is…）'],
+  [/\bthe amount of \w+ (?:are|were|have)\b/gi, 'agreement', function(m){ return m[0].replace(/\b(are|were|have)\b/, function(v){ return v === 'are' ? 'is' : v === 'were' ? 'was' : 'has' }) },
+    'the amount of 作主语时谓语用单数'],
+  [/\ba number of \w+ (?:is|was|has)\b/gi, 'agreement', function(m){ return m[0].replace(/\b(is|was|has)\b/, function(v){ return v === 'is' ? 'are' : v === 'was' ? 'were' : 'have' }) },
+    'a number of + 复数名词 作主语时谓语用复数（a number of students are…）'],
+
+  [/\b(?:in|during) (?:the )?(?:picture|drawing|cartoon|chart)\b[^.]{0,40}\b(?:yesterday|last year|ago)\b/gi, 'verb', null,
+    '描述图画/图表本身用一般现在时；只有图表里出现过的过去时间点才用过去时'],
+  [/\bevery\s+people\b|\ball\s+person\b/gi, 'noun', null,
+    'every 接单数名词、all 接复数名词（every person / all people）'],
+  [/\b(?:moreover|furthermore|besides)\b[^.?!]{0,80}\b(?:moreover|furthermore|besides)\b/gi, 'style', null,
+    '连接词重复：同一段内换用 Furthermore / In addition / What is more'],
+  [/^\s*(?:Notice|NOTICE|An Essay|My View)\b/m, 'style', null,
+    '大作文不写标题（题干没有要求写 title），直接开始第一段'],
+  [/\b(?:Best regards|Yours sincerely|Li Ming)\b/g, 'style', null,
+    '大作文不写落款与署名（那是小作文的要求）'],
+  [/\bI think\b[^.]{0,40}\bI think\b/gi, 'style', null, 'I think 重复，第二段说理尽量少用主观表达'],
+];
+const GRAMMAR_TYPE_CN = { article:'冠词', agreement:'主谓一致', verb:'动词形式', prep:'介词',
+  collocation:'固定搭配', noun:'名词单复数', structure:'句式结构', chinglish:'中式表达',
+  style:'用词', punct:'标点', case:'大小写', chinese:'中英混排', sentence:'句子结构' };
+
+/* 需要用代码判断（正则不够安全）的名词单复数清单 */
+const SINGULAR_NOUNS = ['student','teacher','volunteer','participant','applicant','member','friend',
+  'classmate','book','activity','event','problem','question','reason','suggestion','benefit','feature',
+  'way','method','place','thing','worker','player','singer','writer','speaker','visitor','guest',
+  'expert','chef','judge','library','university','letter','email','report','notice'];
+const PLURAL_NOUNS = ['students','teachers','volunteers','participants','applicants','members','friends',
+  'classmates','books','activities','events','problems','questions','reasons','suggestions','benefits',
+  'features','ways','methods','places','things','days','hours','weeks','months','years','people',
+  'children','guests','experts'];
+const ABBR = ['a.m.','p.m.','mr.','mrs.','ms.','dr.','prof.','etc.','e.g.','i.e.','no.','vs.','st.'];
+
+/* 句式结构 / 衔接词 识别表：只用于评分加分，不产生错误 */
+const LINKERS = ['first','firstly','second','secondly','third','thirdly','finally','lastly','moreover',
+  'furthermore','besides','in addition',"what's more",'what is more','above all','in fact','as a result',
+  'for example','for instance','however','therefore','meanwhile'];
+const STRUCTS = [
+  [/\b(which|who|that|where|when)\b\s+\w+\s+\w+/i, '定语从句'],
+  [/\b(because|since|so that|in order to|so as to)\b/i, '原因/目的'],
+  [/\b(if|unless|provided that|as long as)\b/i, '条件句'],
+  [/\b(although|though|while|whereas)\b/i, '让步/对比'],
+  [/\b(not only|both|either|neither)\b/i, '并列结构'],
+  [/\bthere\s+(is|are|will be)\b/i, 'there be 句型'],
+  [/\bit\s+is\s+\w+\s+(that|to)\b/i, 'it 形式主语'],
+  [/\bmore\s+\w+\s+than\b|\b\w+er\s+than\b/i, '比较结构'],
+  [/\b\w+ing\b\s*,/i, '非谓语作状语'],
+  [/\bwill\s+be\s+\w+ing\b/i, '将来进行时'],
+];
+
+/* ---------- 语法检查主函数：返回 [{type, original, suggest, why}] ---------- */
+function checkGrammar(text){
+  const out=[], seen=new Set();
+  if(!text) return out;
+  GRAMMAR.forEach(rule=>{
+    const [re, type, suggest, why] = rule;
+    if(!why) return;
+    const r = new RegExp(re.source, re.flags.indexOf('g')>=0 ? re.flags : re.flags+'g');
+    let m, guard=0;
+    while((m = r.exec(text)) && guard++ < 200){
+      const original = m[0];
+      const key = type + '|' + original.toLowerCase();
+      if(seen.has(key)){ if(m.index===r.lastIndex) r.lastIndex++; continue }
+      seen.add(key);
+      let fix = null;
+      if(suggest){
+        if(typeof suggest === 'function'){ try{ fix = suggest(m) }catch(e){ fix = null } }
+        else {
+          try{ fix = original.replace(new RegExp(re.source, re.flags.replace('g','')), suggest) }catch(e){ fix = suggest }
+        }
+        if(fix === original) fix = null;
+      }
+      out.push({ type, original, suggest:fix, why });
+      if(m.index===r.lastIndex) r.lastIndex++;
+    }
+  });
+  /* one of the + 单数名词 */
+  const reOne = /\bone\s+of\s+the\s+([A-Za-z]+)\b/gi; let m1;
+  while((m1 = reOne.exec(text))){
+    if(SINGULAR_NOUNS.indexOf(m1[1].toLowerCase())>=0){
+      out.push({ type:'noun', original:m1[0], suggest:m1[0].replace(/\b([A-Za-z]+)$/, '$1s'),
+        why:'one of the 后面必须接复数名词（one of the students）' });
+    }
+  }
+  /* each + 复数名词 */
+  const reEach = /\beach\s+([A-Za-z]+)\b/gi; let m2;
+  while((m2 = reEach.exec(text))){
+    const w = m2[1].toLowerCase();
+    if(PLURAL_NOUNS.indexOf(w)>=0){
+      out.push({ type:'noun', original:m2[0], suggest:m2[0].slice(0, -1),
+        why:'each 后面接单数名词（each student）' });
+    }
+  }
+  /* 句首小写（跳过常见缩写后的位置） */
+  const segs = text.split(/(?<=[.!?])\s+/);
+  segs.forEach(seg=>{
+    const s = seg.replace(/^\s+/,'');
+    if(!s || !/^[a-z]/.test(s)) return;
+    const prev = text.slice(0, text.indexOf(seg));
+    const tail = prev.trim().toLowerCase();
+    if(ABBR.some(a=>tail.endsWith(a))) return;
+    if(/^[a-z]{1,3}\.\s*$/.test(prev.trim())) return;
+    out.push({ type:'case', original:s.slice(0,24), suggest:s[0].toUpperCase()+s.slice(1,24),
+      why:'句首字母要大写' });
+  });
+  /* 逗号连接两个完整句子（流水句）：确认前一分句不是从句/状语/不定式短语 */
+  const SUB = /^(if|when|while|although|though|because|since|as|unless|until|after|before|once|whether|that|who|which|where|even if|as soon as|in case|so that|no matter|the moment)\b/i;
+  const FRONT = /^(to|in|on|at|for|with|by|from|during|despite|regarding|considering|given|thanks to|on behalf of|in order to|in response to|as for|apart from|instead of|due to|according to|compared with|together with|along with|upon|having|being)\b|^\w+ing\b/i;
+  const DISC = /^(first|firstly|second|secondly|third|thirdly|finally|lastly|moreover|furthermore|besides|however|therefore|meanwhile|also|above all|in fact|for example|for instance|as a result|what's more|what is more|in addition|to begin with|last but not least)\s*,?\s*/i;
+  const cs = /,(\s+)((?:I|we|you|they|he|she|it)\s+(?:will|would|can|could|may|might|must|should|am|is|are|was|were|have|has|had|do|does|did)\b)/g;
+  let cm;
+  while((cm = cs.exec(text))){
+    if(cm[1].indexOf('\n')>=0) continue;
+    const before = text.slice(0, cm.index);
+    const cut = Math.max(before.lastIndexOf('. '), before.lastIndexOf('! '), before.lastIndexOf('? '), before.lastIndexOf('\n'));
+    const clause = before.slice(cut+1).trim().replace(/,$/,'');
+    if(!clause) continue;
+    if(SUB.test(clause)) continue;
+    const stripped = clause.replace(DISC, '').trim();
+    if(stripped !== clause && FRONT.test(stripped)) continue;
+    if(FRONT.test(clause)) continue;
+    if(/\b(and|but|so|or|yet|for|nor|then|while|whereas|because|which|who|that|if|when)\s*$/i.test(clause)) continue;
+    out.push({ type:'sentence', original:cm[0].trim(),
+      suggest: clause + '. ' + cm[2].replace(/^\w/, c=>c.toUpperCase()),
+      why:'逗号连接了两个完整句子（流水句）：应改句号、分号，或加 and/but/so 等连词' });
+  }
+  /* 拼写（独立于语法表，单独计分） */
+  Object.keys(SPELL).forEach(b=>{
+    if(new RegExp('\\b'+b+'\\b','i').test(text)) out.push({ type:'spelling', original:b, suggest:SPELL[b], why:'拼写错误' });
+  });
+  return out;
+}
+function grammarFixes(){ return cur && cur.result ? (cur.result.grammar||[]) : [] }
+
+/* ================= 大作文评分（20 分制）=================
+ * 内容 7 / 结构 5 / 语言 6 / 格式 2（对应语料库权重 0.35 / 0.25 / 0.30 / 0.10）
+ * 语言分沿用"证据制"：从基线往上挣，语法硬伤逐处扣，模板化给上限。
+ */
+const BANDS = [
+  [17, '17-20 第一档'], [13, '13-16 第二档'], [9, '9-12 第三档'], [5, '5-8 第四档'], [0, '1-4 第五档'],
+];
+
+/* 段落功能关键词：判断三段是否各司其职 */
+const P1_WORDS = ['drawing','picture','cartoon','chart','graph','depict','portray','illustrat','caption','scene','as is shown','as can be seen'];
+const P2_WORDS = ['intend','reveal','convey','meaning','implication','indicate','suggest','lie in','stem from','because','owing to','due to','reason','factor','firstly','for one thing','to begin with','moreover','furthermore','in addition'];
+const P3_WORDS = ['conclusion','conclude','to sum up','in summary','therefore','thus','suggest','proposal','should','only in this way','only by','measure','call for','it is high time'];
+const REASON_MARKS = ['for one thing','for another','firstly','secondly','to begin with','moreover','furthermore','in the meantime','in addition','on the one hand','on the other hand','besides','what is more'];
+
+function gradeEssay(){
+  const essay = composeEssay();
+  const words = countWords(essay);
+  const plain = essay.replace(/\[\[[^\]]+\]\]/g, '');
+  const low = plain.toLowerCase();
+  const plan = cur.plan || {};
+  const out = essay ? essay.split('\n\n').filter(Boolean) : [];
+
+  /* ===== 1 内容 7 分 ===== */
+  const cChecks = [], cLog = []; let cScore = 7;
+  const reqSecs = cur.sections.filter(s => s.required && !s.hidden);
+  const missReq = reqSecs.filter(s => !isFilled(s));
+  if (reqSecs.length) {
+    cScore = 7 * ((reqSecs.length - missReq.length) / reqSecs.length);
+    if (!missReq.length) cChecks.push(['ok', '必写小节全部完成（' + reqSecs.length + '/' + reqSecs.length + '）']);
+    else missReq.forEach(m => cChecks.push(['no', '缺少或未填完：' + m.label]));
+  }
+  /* ① 第一段是否描述图画/图表 */
+  const p1ok = out.length > 0 && P1_WORDS.some(w => out[0].toLowerCase().indexOf(w) >= 0);
+  const hasCap = /\bcaption\b/.test(low) || /["\u201c][A-Z][^"\u201d]{3,60}["\u201d]/.test(plain);
+  if (p1ok) cChecks.push(['ok', '第一段确实在描述图画/图表']);
+  else { cScore -= 1.2; cChecks.push(['no', '第一段没有描述图画/图表（应有 drawing / picture / chart / depict 等）']); cLog.push(['第一段未描述图画', -1.2]); }
+  if (hasCap || plan.genre === 'chart' || !plan.caption_word_en) {
+    cChecks.push(['ok', plan.genre === 'chart' ? '图表题：有数据描述' : (hasCap ? '写了图文字 caption' : '本题图画无文字，无需写 caption')]);
+  } else { cScore -= 0.6; cChecks.push(['no', '图里有文字却没写 caption（常见失分点）']); cLog.push(['漏写 caption', -0.6]); }
+
+  /* ② 第二段是否点出寓意（核心判分点） */
+  const th = String(plan.thesis_en || '').toLowerCase().replace(/[^a-z ]/g, ' ').split(/\s+/).filter(w => w.length >= 5);
+  const thHit = th.filter(w => low.indexOf(w) >= 0).length;
+  const thRatio = th.length ? thHit / th.length : 0;
+  const p2ok = out.length > 1 && P2_WORDS.some(w => out[1].toLowerCase().indexOf(w) >= 0);
+  if (thRatio >= 0.5) cChecks.push(['ok', '第二段主旨与本题寓意一致（命中关键词 ' + thHit + '/' + th.length + '）']);
+  else if (thRatio >= 0.25) { cScore -= 1.0; cChecks.push(['no', '主旨句只有部分扣题（命中关键词 ' + thHit + '/' + th.length + '），建议用本题主旨句']); cLog.push(['主旨句部分扣题', -1.0]); }
+  else { cScore -= 2.0; cChecks.push(['no', '第二段没点出本题寓意（命中关键词 ' + thHit + '/' + th.length + '）—— 这是阅卷核心判分点']); cLog.push(['主旨句未扣题', -2.0]); }
+  if (p2ok) cChecks.push(['ok', '第二段有议论/原因层次']);
+  else { cScore -= 0.8; cChecks.push(['no', '第二段像在描述而非议论，缺少 intend / reveal / reason / because 之类']); cLog.push(['第二段缺议论', -0.8]); }
+
+  /* ③ 原因 ≥2 条 */
+  const reasonCnt = REASON_MARKS.filter(w => low.indexOf(w) >= 0).length;
+  if (reasonCnt >= 2) cChecks.push(['ok', '原因层次 ' + reasonCnt + ' 处（For one thing / For another 等）']);
+  else if (reasonCnt === 1) { cScore -= 0.6; cChecks.push(['no', '只找到 1 处原因层次，建议写 2–3 条原因']); cLog.push(['原因只有 1 条', -0.6]); }
+  else { cScore -= 1.2; cChecks.push(['no', '没有明显的原因层次（只写一条原因会明显失分）']); cLog.push(['无原因层次', -1.2]); }
+
+  /* ④ 关键槽位是否具体 */
+  const keySlots = ['thesis','caption','scene','detail','reason1','reason2','conclusion','action','goal','topic'];
+  const keyVals = [];
+  cur.sections.forEach(s => (s.sents || []).forEach(st => Object.entries(st.slots || {}).forEach(([k, v]) => {
+    if (keySlots.indexOf(k) >= 0 && String(v).trim()) keyVals.push(String(v).trim());
+  })));
+  const vague = keyVals.filter(v => v.split(/\s+/).filter(Boolean).length <= 2);
+  if (vague.length) {
+    const d = Math.min(1.0, vague.length * 0.25);
+    cScore -= d; cLog.push(['关键信息空泛 ' + vague.length + ' 处', -Math.round(d * 100) / 100]);
+    cChecks.push(['no', '关键内容偏空泛：' + vague.slice(0, 3).join('；')]);
+  } else if (keyVals.length) cChecks.push(['ok', '关键信息具体（' + keyVals.length + ' 处）']);
+  cScore = Math.max(0, Math.round(cScore * 100) / 100);
+
+  /* ===== 2 结构 5 分 ===== */
+  const sChecks = []; let sScore = 0;
+  const paraN = out.length;
+  if (paraN === 3) { sScore += 2.0; sChecks.push(['ok', '三段结构完整']); }
+  else if (paraN === 2) { sScore += 1.2; sChecks.push(['no', '只有 ' + paraN + ' 段，大作文必须三段']); }
+  else if (paraN === 1) { sScore += 0.5; sChecks.push(['no', '只有一段，严重失分']); }
+  else if (paraN > 3) { sScore += 1.4; sChecks.push(['no', paraN + ' 段偏多，建议压成三段']); }
+  const p3ok = paraN >= 3 && P3_WORDS.some(w => out[paraN - 1].toLowerCase().indexOf(w) >= 0);
+  if (p3ok) { sScore += 1.0; sChecks.push(['ok', '第三段有结论/建议']); }
+  else sChecks.push(['no', '第三段缺结论或建议（to sum up / should / only in this way…）']);
+  if (reasonCnt >= 2) { sScore += 0.8; sChecks.push(['ok', '论证有层次衔接']); }
+  else sChecks.push(['no', '论证缺少 For one thing / For another 之类衔接']);
+  const bodySecCount = cur.sections.filter(s => s.para === 2 && isFilled(s) && !s._empty).length;
+  if (bodySecCount >= 4) { sScore += 0.6; sChecks.push(['ok', '第二段写了 ' + bodySecCount + ' 个层次']); }
+  else sChecks.push(['no', '第二段只写了 ' + bodySecCount + ' 个层次，建议主旨＋总起＋2 条原因']);
+  const sentPerPara = (out[1] || '').split(/(?<=[.!?])\s+/).filter(Boolean).length;
+  if (sentPerPara >= 3) { sScore += 0.6; sChecks.push(['ok', '第二段 ' + sentPerPara + ' 句，展开充分']); }
+  else sChecks.push(['no', '第二段只有 ' + sentPerPara + ' 句，论证不够展开']);
+  sScore = Math.min(5, Math.round(sScore * 100) / 100);
+
+  /* ===== 3 语言 6 分 ===== */
+  const lChecks = [], lLog = [];
+  const grammar = checkGrammar(plain);
+  const gType = tp => grammar.filter(x => x.type === tp).length;
+  const hardErr = gType('agreement') + gType('verb') + gType('article') + gType('prep')
+                + gType('collocation') + gType('noun') + gType('structure');
+  const softErr = gType('chinglish') + gType('style');
+  const nSpell = gType('spelling'), nPunct = gType('punct'), nCase = gType('case'), nCn = gType('chinese'), nSent = gType('sentence');
+  let lScore = 3.9;
+  lLog.push(['基线', 3.9, '句型正确但不等于好，语言分从 65% 起步']);
+  let wb = 0;
+  if (words >= 180 && words <= 220) { wb = 0.36; lLog.push(['字数 180–220', 0.36, words + ' 词，篇幅到位']); }
+  else if (words >= 160 && words < 180) { wb = 0.12; lLog.push(['字数 160–179', 0.12, words + ' 词，刚过底线']); }
+  else if (words < 160) { wb = -0.5; lLog.push(['字数不足 160', -0.5, words + ' 词，明显偏短']); }
+  else if (words > 240) { wb = -0.24; lLog.push(['字数超 240', -0.24, words + ' 词，偏长易出错']); }
+  lScore += wb;
+  const esc2 = s => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  const usedLinkers = LINKERS.filter(l => new RegExp('\\b' + esc2(l) + '\\b', 'i').test(low));
+  const lb = usedLinkers.length >= 4 ? 0.30 : usedLinkers.length >= 3 ? 0.22 : usedLinkers.length >= 2 ? 0.12 : 0;
+  if (lb) { lScore += lb; lLog.push(['衔接词 ' + usedLinkers.length + ' 种', lb, usedLinkers.slice(0, 6).join(' / ')]); }
+  const usedStructs = STRUCTS.filter(([re]) => re.test(plain)).map(([, n]) => n);
+  const sb = Math.min(0.42, usedStructs.length * 0.07);
+  if (sb) { lScore += sb; lLog.push(['句式结构 ' + usedStructs.length + ' 类', Math.round(sb * 100) / 100, usedStructs.join(' / ')]); }
+  const ct = low.replace(/[^a-z'\- ]/g, ' ').split(/\s+/).filter(w => w.length >= 4);
+  const ttr = ct.length ? (new Set(ct).size / ct.length) : 0;
+  if (ttr >= 0.6) { lScore += 0.24; lLog.push(['词汇丰富度好', 0.24, '实词去重率 ' + Math.round(ttr * 100) + '%']); }
+  else if (ttr >= 0.52) { lScore += 0.12; lLog.push(['词汇丰富度一般', 0.12, '实词去重率 ' + Math.round(ttr * 100) + '%']); }
+  const ded = (name, n, per, cap) => { if (!n) return 0; const d = Math.min(cap, n * per); lScore -= d; lLog.push([name, -Math.round(d * 100) / 100, n + ' 处 × ' + per]); return d };
+  ded('语法错误（主谓一致/动词/冠词/介词/搭配/名词/句式）', hardErr, 0.30, 1.80);
+  ded('拼写错误', nSpell, 0.20, 0.60);
+  ded('中式表达与用词', softErr, 0.20, 0.60);
+  ded('标点问题', nPunct, 0.08, 0.24);
+  ded('大小写问题', nCase, 0.08, 0.24);
+  ded('句子结构（流水句/超长句）', nSent, 0.14, 0.28);
+  if (nCn) { const d = Math.min(0.9, nCn * 0.45); lScore -= d; lLog.push(['中英混排', -Math.round(d * 100) / 100, nCn + ' 处中文']); }
+  let unfilled = 0;
+  cur.sections.forEach(s => (s.sents || []).forEach(st => {
+    if (!st.id || st.id === '__free__' || /^__ai_/.test(st.id)) return;
+    const sen = sentenceById(st.id); if (!sen) return;
+    parseSlots(sen.en).forEach(sl => { if (!String((st.slots && st.slots[sl]) || '').trim()) unfilled++ });
+  }));
+  if (unfilled) { const d = Math.min(1.0, unfilled * 0.25); lScore -= d; lLog.push(['槽位未填', -Math.round(d * 100) / 100, unfilled + ' 个空槽']); }
+
+  /* 模板依赖度上限 */
+  let ownSents = 0, tplSents = 0;
+  cur.sections.forEach(s => (s.sents || []).forEach(st => {
+    if (!st.id) return;
+    if (st.id === '__free__' || /^__ai_/.test(st.id)) ownSents++; else tplSents++;
+  }));
+  let langCap = 6.0, capNote = '';
+  const tplRatio = (ownSents + tplSents) ? tplSents / (ownSents + tplSents) : 1;
+  if (ownSents === 0 && tplSents > 0) {
+    langCap = 4.5;
+    capNote = '全文 ' + tplSents + ' 句全部来自讲义模板，语言分按"模板作文上限" 4.5/6.0 计 —— 想突破就自己写几句（✍️ 自由句 / 🤖 AI 句）';
+  } else if (tplRatio >= 0.8) { langCap = 5.2; capNote = '模板句占比过高，语言分上限 5.2'; }
+  else if (tplRatio >= 0.6) { langCap = 5.6; capNote = '模板句占六成以上，语言分上限 5.6'; }
+  if (ownSents > 0 && hardErr === 0 && nSpell === 0 && nCn === 0) {
+    lScore += 0.30; lLog.push(['零错误且含自写句', 0.30, '自己写的句子也没错，加分项']);
+  }
+  if (lScore > langCap) { lLog.push(['模板化上限', Math.round((langCap - lScore) * 100) / 100, capNote]); lScore = langCap; }
+  lScore = Math.max(0, Math.round(lScore * 100) / 100);
+  const agg = {}; grammar.forEach(x => { agg[x.type] = (agg[x.type] || 0) + 1 });
+  const kinds = Object.keys(agg);
+  if (!grammar.length) lChecks.push(['ok', '语法与用法逐条检查未发现问题（冠词/主谓一致/动词形式/介词搭配/名词单复数/标点/大小写）']);
+  else {
+    lChecks.push(['no', '语法与用法共 ' + grammar.length + ' 处：' + kinds.map(k => (GRAMMAR_TYPE_CN[k] || k) + ' ' + agg[k] + ' 处').join('、')]);
+    lChecks.push(['tip', '逐条对照见下方「🔍 语法与用法逐条纠正」']);
+  }
+  if (capNote) lChecks.push(['tip', capNote]);
+
+  /* ===== 4 格式 2 分 ===== */
+  const fChecks = []; let fScore = 2.0;
+  if (words >= 160 && words <= 220) fChecks.push(['ok', '字数合规（' + words + ' 词，要求 160–200）']);
+  else if (words < 160) { fChecks.push(['no', '字数不足：' + words + ' 词（底线 160）']); fScore -= 1.2; }
+  else { fChecks.push(['no', '字数超限：' + words + ' 词（建议 ≤220）']); fScore -= 0.6; }
+  if (paraN === 3) fChecks.push(['ok', '三段（题干要求 describe / explain / comment 各一段）']);
+  else { fChecks.push(['no', '段落数 ' + paraN + '，应为 3 段']); fScore -= 0.4; }
+  if (/^\s*(Notice|NOTICE|An Essay|My View)\b/m.test(plain)) { fChecks.push(['no', '大作文不写标题']); fScore -= 0.3; }
+  else fChecks.push(['ok', '未写标题（符合大作文要求）']);
+  if (/\b(Li Ming|Best regards|Yours sincerely)\b/.test(plain)) { fChecks.push(['no', '大作文不写落款/署名']); fScore -= 0.3; }
+  else fChecks.push(['ok', '未写落款署名']);
+  if (/^\s+/.test(essay)) { fChecks.push(['no', '段首不要缩进（齐头式顶格）']); fScore -= 0.2; }
+  fScore = Math.max(0, Math.min(2.0, Math.round(fScore * 100) / 100));
+
+  /* ===== 合计 ===== */
+  const total = Math.round((cScore + sScore + lScore + fScore) * 10) / 10;
+  const bandKey = (BANDS.find(([min]) => total >= min) || BANDS[BANDS.length - 1]);
+  const band = bandKey[1];
+  const verdict = total >= 17 ? '🏆 第一档（紧扣寓意、论证充分）'
+    : total >= 13 ? '🎉 第二档（切题、结构完整，语言可再打磨）'
+    : total >= 9 ? '👍 第三档（基本切题，论点与语言是主要失分点）'
+    : total >= 5 ? '📖 第四档（部分偏题或结构松散）'
+    : '💪 第五档（偏题/无结构，建议照模板重写一遍）';
+
+  cur.result = {
+    total, cScore, sScore, lScore, fScore, cChecks, sChecks, lChecks, fChecks, cLog, lLog,
+    verdict, band, words, grammar, langCap, capNote, ownSents, tplSents,
+    missReq, paraN, reasonCnt, thRatio, bodySecCount, sentPerPara, hasCap, p1ok, p2ok, p3ok,
+  };
+
+  /* ===== 改进建议 ===== */
+  const adv = [];
+  if (missReq.length) adv.push('补齐必写小节：' + missReq.map(m => m.label).join('、') + '。');
+  if (!p1ok) adv.push('第一段要"描述"：用 The drawing depicts… / As is vividly shown in the picture… 把画面写出来，3–4 句。');
+  if (!hasCap && plan.genre !== 'chart') adv.push('图画里有文字（caption）就一定要写：The caption reads "…"，这是阅卷常查点。');
+  if (thRatio < 0.5) adv.push('第二段必须点出本题寓意。可点上方「💡 看本题标准主旨句」参考，或直接点主旨句槽位的「💡 用本题主旨句」一键填入。');
+  if (reasonCnt < 2) adv.push('原因要写 2–3 条，并用 For one thing … In the meantime … For another … 或 Firstly / Moreover / Finally 串起来。');
+  if (!p3ok) adv.push('第三段要落到"结论＋建议/展望"：To sum up… / It is high time that we… / Only in this way can we…。');
+  if (paraN !== 3) adv.push('现在是 ' + paraN + ' 段，大作文标准三段：描述图画 → 议论寓意 → 结论建议。');
+  if (grammar.length) adv.push('先改语言硬伤（共 ' + grammar.length + ' 处，已按类型扣分）：' + kinds.map(k => (GRAMMAR_TYPE_CN[k] || k) + ' ' + agg[k] + ' 处').join('、') + '。');
+  else adv.push('语法与用法检查没发现问题，把精力放在"寓意是否点透、例子是否具体"上。');
+  if (capNote) {
+    adv.push('⭐ 语言分为什么只有 ' + lScore.toFixed(2) + '/6.0：' + capNote + '。');
+    adv.push('你目前是 ' + tplSents + ' 句模板句、' + ownSents + ' 句自己的句子。大作文要上 17 分，第二段原因和第三段建议最好用自己的话写。');
+  }
+  if (words < 160) adv.push('字数 ' + words + ' 词不足 160，尽量写到 180–200 词（每条原因多写一句解释即可）。');
+  else if (words < 180) adv.push('字数 ' + words + ' 词刚到线，180–200 词更稳。');
+  if (words > 240) adv.push('字数偏多，删掉重复表达，控制在 160–200 词。');
+  if (usedLinkers.length < 3) adv.push('衔接词偏少：For one thing / For another / Moreover / Furthermore / To sum up 用起来。');
+  if (usedStructs.length < 3) adv.push('句式单一：试着加一句定语从句、一句 Only in this way 倒装、一句 not only…but also，语言分有明显空间。');
+  adv.push('📌 大作文不写标题、不写落款；描述图画用一般现在时，只有图表里的过去时间点才用过去时。');
+  const rub = (DATA.rubric && DATA.rubric.bands) || {};
+  const five = rub[String(bandKey[0])];
+  if (five) adv.push('评分档位说明（' + band + '）：' + Object.entries(five).map(([k, v]) => k + '：' + v).join('；'));
+  ((DATA.rubric && DATA.rubric.common_errors) || []).slice(0, 3).forEach(e => adv.push('常见失分点：' + e));
+  adv.push('📌 规则评分只看可量化项（图画描述、寓意关键词、原因条数、语法错误、字数段落），真实阅卷还会看地道性与逻辑力度 —— 想更接近阅卷手感，点「🤖 AI 智能评价」交叉验证。');
+  renderResult(adv);
+}
+
+function renderResult(adv){
+  const r=cur.result;
+  $('viewWrite').style.display='none';
+  $('viewResult').style.display='block';
+  $('hdBar').innerHTML='<button class="back-btn" onclick="backToWrite()">← 返回修改</button>';
+  $('bigScore').innerHTML=`${r.total}<small>/20</small>`;
+  $('scoreSub').textContent=`${cur.year} 年 · ${cur.system}体系 · ${cur.plan.kind||''} · 全文 ${r.words} 词 · 规则评分`;
+  const color=r.total>=17?'var(--ok)':r.total>=13?'#0f766e':r.total>=9?'var(--warn)':'var(--err)';
+  const bg=r.total>=17?'var(--ok-light)':r.total>=13?'var(--primary-light)':r.total>=9?'var(--accent-light)':'var(--err-light)';
+  $('verdict').textContent=r.verdict;
+  $('verdict').style.cssText=`background:${bg};color:${color}`;
+  $('bandText').textContent='大作文分档（20 分制）：'+r.band+'（规则评分，非 AI 评分）';
+  const dims=[
+    { name:'内容（图画描述＋寓意）', score:r.cScore, max:7, checks:r.cChecks, color:'#0f766e' },
+    { name:'结构（三段、论证层次）', score:r.sScore, max:5, checks:r.sChecks, color:'#2563eb' },
+    { name:'语言（句式、词汇、语法）', score:r.lScore, max:6, checks:r.lChecks, color:'#b45309' },
+    { name:'格式与字数', score:r.fScore, max:2, checks:r.fChecks, color:'#7c3aed' },
+  ];
+  $('dimensions').innerHTML=dims.map(d=>{
+    const pct=Math.round(d.score/d.max*100);
+    const c=pct>=85?'var(--ok)':pct>=60?'#0f766e':pct>=40?'var(--warn)':'var(--err)';
+    return `<div class="dim"><div class="dim-top"><span class="dim-name">${d.name}（占 ${(d.max/20*100).toFixed(0)}%）</span>
+      <span class="dim-score" style="color:${c}">${d.score.toFixed(1)} / ${d.max}</span></div>
+      <div class="bar"><i style="width:${pct}%;background:${d.color}"></i></div>
+      ${d.checks.map(([k,t])=>`<div class="check ${k}">${esc(t)}</div>`).join('')}</div>`;
+  }).join('');
+  /* 语言分明细（让扣分不是黑箱） */
+  const logHtml = (title,log)=>`<div class="dim" style="margin-top:10px"><div class="dim-top"><span class="dim-name">${title}</span></div>
+    ${log.filter(e=>e[1]!==0).map(([n,v,note])=>`<div class="check ${v>0?'ok':'no'}">${esc(n)}：${v>0?'+':''}${v}${note?' —— '+esc(note):''}</div>`).join('')}</div>`;
+  $('dimensions').innerHTML += logHtml('语言分是怎么算出来的（6.0 分制）', r.lLog)
+    + (r.cLog && r.cLog.length ? logHtml('内容分扣分记录', r.cLog) : '');
+  renderGrammar(r.grammar||[]);
+  $('suggestions').innerHTML=adv.filter(Boolean).map(a=>`<div class="advice">${esc(a)}</div>`).join('');
+  $('refEssay').textContent=referenceEssay();
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+/* ================= 🔍 语法与用法逐条纠正 ================= */
+function renderGrammar(list){
+  const meta=$('gramMeta'), body=$('gramBody');
+  if(!meta || !body) return;
+  if(!list.length){
+    meta.textContent='（0 处）';
+    body.innerHTML=`<div class="check ok">✅ 逐条检查完毕：冠词、主谓一致、动词形式、介词与固定搭配、名词单复数、句式结构、标点、大小写均未发现问题。</div>`;
+    return;
+  }
+  const agg={}; list.forEach(x=>{ agg[x.type]=(agg[x.type]||0)+1 });
+  meta.textContent=`（${list.length} 处：` + Object.keys(agg).map(k=>(GRAMMAR_TYPE_CN[k]||k)+' '+agg[k]).join('、') + '）';
+  body.innerHTML = list.map((f,i)=>{
+    const t = GRAMMAR_TYPE_CN[f.type]||f.type;
+    return `<div class="ai-issue">
+      <span class="t">${esc(t)}</span>
+      <span class="old-txt">${esc(f.original)}</span>
+      ${f.suggest?`<div style="margin-top:4px">应写成：<span class="fix">${esc(f.suggest)}</span></div>`:''}
+      <div class="why">${esc(f.why)}</div>
+    </div>`;
+  }).join('');
+}
+function copyFixList(){
+  const list = grammarFixes();
+  if(!list.length){ alert('没有需要修改的地方。'); return }
+  const head = `${cur.year} 年 ${cur.system}体系 · 语法与用法修改清单（共 ${list.length} 处）\r\n`
+    + `规则评分 ${cur.result.total}/20 ｜ 语言 ${cur.result.lScore}/6.0\r\n\r\n`;
+  const body = list.map((f,i)=>`${i+1}. 【${GRAMMAR_TYPE_CN[f.type]||f.type}】${f.original}`
+    + (f.suggest?`\r\n   → 应写成：${f.suggest}`:'') + `\r\n   原因：${f.why}`).join('\r\n\r\n');
+  const t = head + body;
+  const done = ()=>alert('已复制修改清单，可直接粘到笔记里逐条改。');
+  if(navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(t).then(done).catch(()=>fallbackCopy(t,done));
+  else fallbackCopy(t,done);
+}
+function backToWrite(){
+  $('viewResult').style.display='none';
+  $('viewWrite').style.display='block';
+  $('hdBar').innerHTML='<button class="back-btn" onclick="showHome()">← 返回选题</button>';
+  renderHeader(); renderForm(); updatePreview();
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+/* ================= AI 智能评价（DeepSeek） ================= */
+const AI_KEY_LS = 'xzw_ds_key', AI_MODEL_LS = 'xzw_ds_model';
+function aiKey(){ try{ return localStorage.getItem(AI_KEY_LS) || DATA.defaultKey || '' }catch(e){ return DATA.defaultKey || '' } }
+function aiModel(){ try{ return localStorage.getItem(AI_MODEL_LS) || 'deepseek-chat' }catch(e){ return 'deepseek-chat' } }
+function openAiSettings(){
+  $('aiKeyInput').value = aiKey();
+  $('aiModel').value = aiModel();
+  $('aiKeyState').textContent = aiKey() ? '当前状态：已配置 Key（保存在本机浏览器）' : '当前状态：未配置（AI 评价不可用，规则评分仍可正常使用）';
+  $('aiModal').className = 'modal on';
+}
+function closeAiSettings(){ $('aiModal').className = 'modal' }
+function saveAiKey(){
+  const v = $('aiKeyInput').value.trim();
+  try{ localStorage.setItem(AI_KEY_LS, v); localStorage.setItem(AI_MODEL_LS, $('aiModel').value); }catch(e){ alert('浏览器不允许保存（隐私模式），本次会话仍可使用'); }
+  closeAiSettings();
+  alert(v ? '已保存。点「🤖 AI 智能评价」开始批改。' : '已清空 Key。');
+}
+function clearAiKey(){ try{ localStorage.removeItem(AI_KEY_LS) }catch(e){} $('aiKeyInput').value=''; $('aiKeyState').textContent='已清除。'; }
+
+function buildAiPrompt(){
+  const plan = cur.plan || {};
+  return `你是考研英语（一）大作文（Section III Part B，20 分）的资深阅卷老师，请批改下面这篇学生作文。
+
+【题目】${cur.year} 年英语（一）大作文
+【真题原题】
+${(plan.prompt_en||'（原题缺失）').slice(0,1200)}
+【图画/图表内容（原卷为图片，此处为文字说明）】${plan.caption||'-'}
+【本题寓意/主旨句（标准答案，供你核对是否扣题）】
+  中文：${plan.thesis_zh||'-'}
+  英文：${plan.thesis_en||'-'}
+【题型】${plan.kind||''} · ${plan.genre==='chart'?'图表题':'图画题'} · 话题：${plan.topic||'-'}
+【所用体系】${cur.system}（${DATA.systems[cur.system].desc}）
+【格式要求】三段、齐头式顶格、段间空行；不写标题、不写落款；160–200 词
+【时态】描述图画/图表本身用一般现在时；只有图表里出现过的过去时间点才用过去时
+
+【学生作文】
+${cur.essay.replace(/\[\[[^\]]+\]\]/g,'（此处漏填）')}
+
+【评分标准（总分 20 分）】
+内容 7 分：① 第一段确实描述了图画/图表（含 caption 或关键数据）② 第二段点出本题寓意（与上面标准主旨句语义一致）③ 原因 ≥2 条且具体
+结构 5 分：三段清晰；第二段有 For one thing / For another 或 Firstly / Moreover 层次；第三段有结论＋建议/展望
+语言 6 分：语法正确、拼写正确、句式多样、用词地道、无中式英语、不堆砌空洞长难句
+格式 2 分：字数 160–200；三段；无标题无落款；标点规范
+
+请严格只输出一个 JSON 对象（不要 markdown 代码块、不要多余文字），字段如下：
+{
+ "total": 数字(0-20, 保留1位小数),
+ "band": "档位（17-20 第一档 / 13-16 第二档 / 9-12 第三档 / 5-8 第四档 / 1-4 第五档）",
+ "dimensions": {
+   "content":  {"score": 数字, "max": 7, "comment": "两句以内点评：图画描述是否到位、寓意是否扣题"},
+   "structure":{"score": 数字, "max": 5, "comment": "点评三段与论证层次"},
+   "language": {"score": 数字, "max": 6, "comment": "点评语法/用词/句式/地道性"},
+   "format":   {"score": 数字, "max": 2, "comment": "点评字数、段落、有无标题落款"}
+ },
+ "thesis_matched": true 或 false,
+ "highlights": ["写得好的地方，1-3条，具体到句子或表达"],
+ "problems": [{"type":"grammar|spelling|expression|content|format","original":"原文片段","suggest":"修改后","why":"为什么，中文一句"}],
+ "upgraded": [{"original":"原句","upgraded":"更贴近高分模板/更地道的表达","note":"说明"}],
+ "rewrite_hint": "如果重写，最该改的三点（中文，用1.2.3.列出）"
+}`;
+}
+
+async function aiReview(){
+  const key = aiKey();
+  if(!key){ openAiSettings(); return; }
+  const essay = composeEssay();
+  if(countWords(essay) < 20){ alert('作文内容太少，先写一些再让 AI 评价吧。'); return; }
+  if(cur.system && !cur.essay) updatePreview();
+
+  // 切到结果页并显示 loading
+  $('viewWrite').style.display='none';
+  $('viewResult').style.display='block';
+  $('hdBar').innerHTML = '<button class="back-btn" onclick="backToWrite()">← 返回修改</button>';
+  $('aiCard').style.display='block';
+  $('aiMeta').textContent = '';
+  $('aiBody').innerHTML = '<div class="ai-loading"><span class="spin"></span> DeepSeek 正在逐句批改，请稍候（约 10–30 秒）…</div>';
+  $('aiCard').scrollIntoView({behavior:'smooth',block:'start'});
+
+  const t0 = Date.now();
+  try{
+    const res = await fetch('https://api.deepseek.com/chat/completions', {
+      method:'POST',
+      headers:{ 'Content-Type':'application/json', 'Authorization':'Bearer '+key },
+      body: JSON.stringify({
+        model: aiModel(),
+        messages:[
+          { role:'system', content:'你是考研英语一小作文阅卷专家，输出严格 JSON，不要任何额外文字。' },
+          { role:'user', content: buildAiPrompt() }
+        ],
+        temperature: 0.3,
+        max_tokens: 2000,
+        stream:false
+      })
+    });
+    if(!res.ok){
+      const errTxt = await res.text();
+      throw new Error('HTTP '+res.status+' '+(errTxt||'').slice(0,200));
+    }
+    const j = await res.json();
+    const content = (j.choices && j.choices[0] && j.choices[0].message && j.choices[0].message.content) || '';
+    const data = parseAiJson(content);
+    if(!data) throw new Error('返回内容不是有效 JSON：'+content.slice(0,200));
+    cur.ai = data;
+    renderAi(data, Date.now()-t0, j.usage);
+  }catch(e){
+    const msg = String(e.message||e);
+    $('aiBody').innerHTML = `<div class="ai-issue"><span class="t">调用失败</span>${esc(msg)}
+      <div class="why">常见原因：Key 无效或已过期、余额不足、网络被拦截、模型名不支持。</div>
+      <div style="margin-top:8px"><button class="mini-btn" onclick="openAiSettings()">检查 Key 设置</button>
+      <button class="mini-btn" onclick="aiReview()">重试</button></div></div>`;
+  }
+}
+
+function parseAiJson(text){
+  if(!text) return null;
+  let t = text.trim().replace(/^```(?:json)?/i,'').replace(/```$/,'').trim();
+  try{ return JSON.parse(t) }catch(e){}
+  const i = t.indexOf('{'), j = t.lastIndexOf('}');
+  if(i>=0 && j>i){ try{ return JSON.parse(t.slice(i,j+1)) }catch(e){} }
+  return null;
+}
+
+/* ================= 🤖 AI 帮我想 3 句（按段生成备选句） ================= */
+function buildSuggestPrompt(s){
+  const plan = cur.plan || {};
+  const { ids, extra } = groupOptions(s);
+  const existing = ids.concat(extra.map(x=>x.id)).map(id=>{ const x=sentenceById(id); return x?x.en.replace(/\s+/g,' ').trim():'' })
+                    .filter(Boolean).slice(0,12);
+  /* 把用户已填好的具体信息交给 AI，保证新句子与全文一致 */
+  const facts = {};
+  const put = (k,v)=>{ const val=String(v||'').trim(); if(val && !facts[k]) facts[k]=val };
+  cur.sections.forEach(sec=>(sec.sents||[]).forEach(st=>{
+    Object.keys(st.slots||{}).forEach(k=>{ const v=String(st.slots[k]||'').trim(); if(v && !/^\[\[/.test(v)) put(k,v) });
+  }));
+  const factLines = Object.keys(facts).slice(0,24).map(k=>`- ${(DATA.slotDefs[k]&&DATA.slotDefs[k].label)||k}：${facts[k]}`);
+  return `你是考研英语（一）大作文（20 分，160–200 词）的资深写作老师。请为下面这个具体句子位置，额外写 3 个可直接使用的英文句子。
+
+【体系】${cur.system}（${DATA.systems[cur.system].desc}）
+【题目】${cur.year} 年英语（一）大作文（${plan.kind||''} · ${plan.genre==='chart'?'图表题':'图画题'}）
+【真题原题】${(plan.prompt_en||'见真题').slice(0,900)}
+【图画/图表内容】${plan.caption||'-'}
+【本题寓意（必须扣住）】中文：${plan.thesis_zh||'-'}｜英文：${plan.thesis_en||'-'}
+【本文已填好的具体信息（必须沿用，不要自创冲突信息）】
+${factLines.join('\n') || '（暂无）'}
+【要写的位置】${s.label}（${PARA_LABEL[s.para]||''}）
+【该位置已有句型（严禁重复或改写它们）】
+${existing.map((x,i)=>(i+1)+'. '+x).join('\n') || '（无）'}
+
+【硬性要求】
+1. 每个句子必须完成与「${s.label}」完全相同的段落功能，放在该位置读起来自然。
+2. 必须扣住本题寓意，不要写与本图画无关的空话；用上面列出的具体信息把内容填实。
+3. 每句 15–30 词，语法绝对正确，用大作文高分表达（可用从句、倒装、not only…but also），不要中式英语。
+4. 三句之间要有差异（不同角度或不同句式开头），不要只是同义替换。
+5. 一句话就是一句，不要编号、不要中文解释、不要 markdown、不要引号，不要留任何 {{占位符}}。
+
+只输出一个 JSON 对象：
+{"sentences":["第一句","第二句","第三句"]}`;
+}
+
+async function aiSuggest(si){
+  const key = aiKey();
+  if(!key){ openAiSettings(); return; }
+  const s = cur.sections[si];
+  if(s.aiBusy) return;
+  s.aiBusy = true; renderForm();
+  try{
+    const res = await fetch('https://api.deepseek.com/chat/completions', {
+      method:'POST',
+      headers:{ 'Content-Type':'application/json', 'Authorization':'Bearer '+key },
+      body: JSON.stringify({
+        model: aiModel(),
+        messages:[
+          { role:'system', content:'你是考研英语一小作文写作老师，输出严格 JSON，不要任何额外文字。' },
+          { role:'user', content: buildSuggestPrompt(s) }
+        ],
+        temperature: 0.8, max_tokens: 900, stream:false
+      })
+    });
+    if(!res.ok) throw new Error('HTTP '+res.status+' '+(await res.text()||'').slice(0,160));
+    const j = await res.json();
+    const content = (j.choices&&j.choices[0]&&j.choices[0].message&&j.choices[0].message.content)||'';
+    const data = parseAiJson(content);
+    let list = data && (data.sentences || data.sents || data.list);
+    if(!Array.isArray(list) || !list.length) throw new Error('返回内容无法解析：'+content.slice(0,160));
+    list = list.map(x=>String(x).replace(/^\s*\d+[.、)]\s*/,'').replace(/^["“]|["”]$/g,'').trim()).filter(Boolean).slice(0,5);
+    if(!list.length) throw new Error('AI 没有返回可用的句子');
+    s.aiSents = list;
+    /* 自动把第一句挂到本段一个空位（若本段还没有句子，则新建一句） */
+    if(!s.sents.length) s.sents.push({ id:'__ai_0__', slots:{}, aiSents:list });
+    else s.sents[0].aiSents = s.sents[0].aiSents || list;
+    s.lastAiError = '';
+  }catch(e){
+    s.lastAiError = String(e.message||e);
+  }finally{
+    s.aiBusy = false; renderForm(); updatePreview();
+  }
+}
+
+function renderAi(a, ms, usage){
+  const dimName = { content:'内容要点', structure:'组织与衔接', language:'语言质量', format:'格式与卷面' };
+  let h = `<div class="ai-score"><b>${a.total!=null?a.total:'—'}</b><span class="wc">/10（AI 评分）</span>
+    <span class="band">${esc(a.band||'')}</span>
+    <span class="wc">· 用时 ${(ms/1000).toFixed(1)}s${usage?` · tokens ${usage.total_tokens}`:''}</span></div>`;
+  /* 规则评分 vs AI 评分对照：把两边差距说清楚，避免"到底信哪个"的困惑 */
+  if(cur.result && a.total!=null){
+    const rt = cur.result.total, diff = Math.round((rt - a.total)*10)/10;
+    const note = Math.abs(diff) < 0.6
+      ? '两个分数很接近，说明这篇的语言和要点都属于"规则能看出来的问题都看出来了"。'
+      : diff > 0
+        ? '规则评分更高：规则只能检查"可量化的东西"（要点齐不齐、语法错没错、版式对不对），而 AI 会额外扣"内容是否真扣题、表达是否地道、有没有模板痕迹"。差得越多，说明问题越集中在后者。'
+        : 'AI 评分更高：说明你的自写内容质量好于规则给出的基础分（规则对"自己写"的部分只能按字数、衔接词、句式结构粗略估计）。';
+    const rows = cur.result.grammar && cur.result.grammar.length
+      ? `<div class="check no">规则评分已扣掉的硬伤：${cur.result.grammar.length} 处（冠词/主谓一致/动词/搭配/名词/标点…）</div>`
+      : `<div class="check ok">规则评分未发现语法硬伤，两边的差距主要在"地道性、扣题度、内容深度"这些只能靠 AI 判断的地方</div>`;
+    h += `<div class="ai-sec"><h4>规则评分 vs AI 评分</h4>
+      <div class="ai-dim"><b>规则评分 ${rt}/10 ｜ AI 评分 ${a.total}/10 ｜ 差值 ${diff>0?'+':''}${diff}</b>
+      <div style="margin-top:4px">规则：内容 ${cur.result.cScore}/3.5 · 结构 ${cur.result.sScore}/2.5 · 语言 ${cur.result.lScore}/3.0 · 格式 ${cur.result.fScore}/1.0</div>
+      ${rows}
+      <div class="why" style="margin-top:6px">${esc(note)}</div></div></div>`;
+  }
+  if(a.dimensions){
+    h += `<div class="ai-sec"><h4>AI 分维度点评</h4>`;
+    Object.keys(dimName).forEach(k=>{
+      const d = a.dimensions[k]; if(!d) return;
+      h += `<div class="ai-dim"><b>${dimName[k]}：${d.score!=null?d.score:'—'} / ${d.max!=null?d.max:'—'}</b><br>${esc(d.comment||'')}</div>`;
+    });
+    h += `</div>`;
+  }
+  if(a.highlights && a.highlights.length){
+    h += `<div class="ai-sec"><h4>亮点</h4>` + a.highlights.map(x=>`<div class="ai-hl">${esc(x)}</div>`).join('') + `</div>`;
+  }
+  if(a.problems && a.problems.length){
+    const TYPE = { grammar:'语法', spelling:'拼写', expression:'表达', content:'内容', format:'格式' };
+    h += `<div class="ai-sec"><h4>逐条修改（${a.problems.length} 处）</h4>` + a.problems.map(p=>{
+      const t = TYPE[p.type]||p.type||'问题';
+      return `<div class="ai-issue"><span class="t">${esc(t)}</span>${esc(p.original||'')}
+        ${p.suggest?`<div style="margin-top:4px">建议改为：<span class="fix">${esc(p.suggest)}</span></div>`:''}
+        ${p.why?`<div class="why">${esc(p.why)}</div>`:''}</div>`;
+    }).join('') + `</div>`;
+  }
+  if(a.upgraded && a.upgraded.length){
+    h += `<div class="ai-sec"><h4>高分升级句式</h4>` + a.upgraded.map(u=>
+      `<div class="ai-up"><div class="old">${esc(u.original||'')}</div>
+       <div class="new">→ ${esc(u.upgraded||'')}</div>
+       ${u.note?`<div class="why" style="font-size:12.3px;color:var(--muted)">${esc(u.note)}</div>`:''}</div>`).join('') + `</div>`;
+  }
+  if(a.rewrite_hint){
+    h += `<div class="ai-sec"><h4>重写建议</h4><div style="font-size:13.3px;line-height:1.85;white-space:pre-wrap">${esc(a.rewrite_hint)}</div></div>`;
+  }
+  h += `<div style="margin-top:10px"><button class="mini-btn" onclick="aiReview()">重新评价</button>
+    <button class="mini-btn" onclick="openAiSettings()">AI 设置</button></div>`;
+  $('aiMeta').textContent = '（DeepSeek ' + aiModel() + '）';
+  $('aiBody').innerHTML = h;
+}
+
+/* ================= 启动 ================= */
+renderHome(); showHome();
+</script>
+</body>
+</html>
